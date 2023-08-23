@@ -1,0 +1,10 @@
+<div class="card pt-1 pb-3">
+    <p-menubar [model]="itemsMenu">
+      <ng-template pTemplate="start">
+        <img routerLink="home" src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
+      </ng-template>
+      <ng-template pTemplate="end">
+        <p-menubar [model]="userMenu"></p-menubar>
+      </ng-template>
+    </p-menubar>
+  </div>

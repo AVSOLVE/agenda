@@ -1,11 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { AccordionModule } from 'primeng/accordion';
 import { AnimateModule } from 'primeng/animate';
+import { FilterService, Footer, Header, SharedModule } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AutoFocusModule } from 'primeng/autofocus';
-import { AvatarGroupModule } from 'primeng/avatargroup';
 import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 import { BadgeModule } from 'primeng/badge';
 import { BlockUIModule } from 'primeng/blockui';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -33,7 +38,6 @@ import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { EditorModule } from 'primeng/editor';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
-import { FilterService, Footer, Header, SharedModule } from 'primeng/api';
 import { FocusTrapModule } from 'primeng/focustrap';
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageModule } from 'primeng/image';
@@ -41,14 +45,14 @@ import { InplaceModule } from 'primeng/inplace';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { KnobModule } from 'primeng/knob';
 import { ListboxModule } from 'primeng/listbox';
 import { MegaMenuModule } from 'primeng/megamenu';
-import { MenubarModule } from 'primeng/menubar';
 import { MenuModule } from 'primeng/menu';
+import { MenubarModule } from 'primeng/menubar';
 import { MessagesModule } from 'primeng/messages';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OrderListModule } from 'primeng/orderlist';
@@ -56,8 +60,8 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
 import { OverlayModule } from 'primeng/overlay';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PaginatorModule } from 'primeng/paginator';
-import { PanelMenuModule } from 'primeng/panelmenu';
 import { PanelModule } from 'primeng/panel';
+import { PanelMenuModule } from 'primeng/panelmenu';
 import { PasswordModule } from 'primeng/password';
 import { PickListModule } from 'primeng/picklist';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -94,8 +98,8 @@ import { TreeSelectModule } from 'primeng/treeselect';
 import { TreeTableModule } from 'primeng/treetable';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { VirtualScrollerModule } from 'primeng/virtualscroller';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { AppRoutingModule } from "./app-routing.module";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
   declarations: [],
@@ -103,6 +107,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CommonModule,
   ],
   exports: [
+    AppRoutingModule,
+
     AccordionModule,
     AnimateModule,
     AutoCompleteModule,
@@ -113,6 +119,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BlockUIModule,
     BreadcrumbModule,
     ButtonModule,
+    BrowserModule,
+    BrowserAnimationsModule,
     CalendarModule,
     CardModule,
     CarouselModule,
@@ -173,6 +181,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RadioButtonModule,
     RatingModule,
     RippleModule,
+    RouterModule,
     ScrollerModule,
     ScrollPanelModule,
     ScrollTopModule,

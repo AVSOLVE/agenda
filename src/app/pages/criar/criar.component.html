@@ -1,0 +1,48 @@
+<p-card
+  header="Preencha os dados:"
+  styleClass="text-center w-5 m-auto shadow-7 gap-3"
+>
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+  <input
+    pInputText
+    placeholder="Nome"
+    formControlName="name"
+    [required]="true"
+    type="text"
+    class="w-full mb-3 text-center"
+  />
+
+  <p-calendar
+    styleClass="w-full mb-3 text-center items-center"
+    placeholder="Data"
+    formControlName="date"
+    [required]="true"
+    [minDate]="minimumDate"
+    dateFormat="dd/mm/yy"
+    [readonlyInput]="true"
+  ></p-calendar>
+
+  <p-dropdown
+    styleClass="w-full mb-3"
+    placeholder="Procedimento"
+    formControlName="procedure"
+    [required]="true"
+    [options]="procedures"
+    optionLabel="name"
+  ></p-dropdown>
+
+  <p-dropdown
+    styleClass="w-full"
+    placeholder="Horário"
+    [required]="true"
+    formControlName="time"
+    [options]="hours"
+    optionLabel="name"
+  ></p-dropdown>
+  <p-divider></p-divider>
+  <div class="flex flex-grow-1 justify-content-center gap-2">
+    <p-button type="submit" styleClass="p-button-success">Salvar</p-button>
+    <p-button styleClass="p-button-danger">Cancelar</p-button>
+  </div>
+</form>
+</p-card>
