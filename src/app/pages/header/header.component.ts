@@ -18,8 +18,8 @@ export class HeaderComponent implements OnInit {
         routerLink: 'home',
       },
       {
-        label: 'Edit',
-        routerLink: 'editar',
+        label: 'Cadastros',
+        routerLink: 'cadastrar',
         icon: 'pi pi-fw pi-pencil',
       },
     ];

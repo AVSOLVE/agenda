@@ -6,6 +6,7 @@ import { HomeComponent } from "./pages/home/home.component";
 import { SignupComponent } from "./pages/signup/signup.component";
 import { EditarComponent } from "./pages/editar/editar.component";
 import { CriarComponent } from "./pages/criar/criar.component";
+import { CadastrarComponent } from "./pages/cadastrar/cadastrar.component";
 
 const routes: Routes = [
   {
@@ -22,6 +23,9 @@ const routes: Routes = [
   },
   {
     path: 'criar', component: CriarComponent
+  },
+  {
+    path: 'cadastrar', component: CadastrarComponent
   },
   {
     path: '', redirectTo:'home', pathMatch: 'full'
