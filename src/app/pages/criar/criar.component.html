@@ -1,6 +1,6 @@
 <p-card
   header="Preencha os dados:"
-  styleClass="text-center w-5 m-auto shadow-7 gap-3"
+  styleClass="text-center p-5 m-auto shadow-7 gap-3"
 >
 <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
   <input
@@ -13,7 +13,7 @@
   />
 
   <p-calendar
-    styleClass="w-full mb-3 text-center items-center"
+    styleClass="w-full mb-3 criar__calendar"
     placeholder="Data"
     formControlName="date"
     [required]="true"

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 
 interface Time {
@@ -8,7 +8,8 @@ interface Time {
 @Component({
   selector: 'app-criar',
   templateUrl: './criar.component.html',
-  styleUrls: ['./criar.component.css']
+  styleUrls: ['./criar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class CriarComponent implements OnInit {

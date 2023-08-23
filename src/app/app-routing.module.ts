@@ -28,7 +28,7 @@ const routes: Routes = [
     path: 'cadastrar', component: CadastrarComponent
   },
   {
-    path: '', redirectTo:'home', pathMatch: 'full'
+    path: '', redirectTo:'cadastrar', pathMatch: 'full'
   },
 ];
 
