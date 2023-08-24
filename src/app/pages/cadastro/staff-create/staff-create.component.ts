@@ -1,23 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
-import { NameValueInterface } from "../shared/interfaces/NameValue.interface";
+import { NameValueInterface } from "../../shared/NameValue.interface";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-user-create',
-  templateUrl: './user-create.component.html',
-  styleUrls: ['./user-create.component.css']
+  selector: 'app-staff-create',
+  templateUrl: './staff-create.component.html',
+  styleUrls: ['./staff-create.component.css']
 })
-
-export class UserCreateComponent implements OnInit {
+export class StaffCreateComponent implements OnInit {
   genders!: NameValueInterface[];
+  services!: NameValueInterface[];
   userForm!: FormGroup;
   currentDate = new Date();
 
-  constructor() { }
+  constructor(private _router:Router) { }
 
   ngOnInit() {
     this.clearUserForm();
     this.setGenders();
+    this.setServices();
   }
 
   clearUserForm(): void {
@@ -27,6 +29,7 @@ export class UserCreateComponent implements OnInit {
       email: new FormControl(''),
       sexo: new FormControl(''),
       data_nascimento: new FormControl(''),
+      procedures: new FormControl(''),
     });
   }
 
@@ -38,12 +41,21 @@ export class UserCreateComponent implements OnInit {
     ];
   }
 
+  setServices():void{
+    this.services = [
+      { name: 'Fisioterapia', value: 'F' },
+      { name: 'Massoterapia', value: 'M' },
+      { name: 'Outro', value: 'O' },
+    ];
+  }
+
   save() {
     console.log(this.userForm.value);
-    this.clearUserForm()
+    this.clearUserForm();
   }
 
   cancel() {
-    throw new Error('Method not implemented.');
+    this.clearUserForm();
+    this._router.navigate(['/home'])
   }
 }

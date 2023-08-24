@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from "@angular/router";
 import { TableHeaderCheckboxToggleEvent, TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
 
 interface Column {
@@ -16,24 +17,21 @@ export class HomeComponent {
 toggleDeleteOnSelection: any;
 
 
-visible: boolean = false;
-
-showDialog() {
-    this.visible = true;
-}
-
 delete() {
 throw new Error('Method not implemented.');
 }
-create() {
-throw new Error('Method not implemented.');
 
+create() {
+  this._router.navigate(['/criar']);
 }
+
 update() {
 throw new Error('Method not implemented.');
 }
+
 rowData: any;
 toggleEditOnSelection: any;
+
 onHeaderCheckboxToggle($event: TableHeaderCheckboxToggleEvent) {
 throw new Error('Method not implemented.');
 }
@@ -46,11 +44,12 @@ throw new Error('Method not implemented.');
 onPage($event: TablePageEvent) {
 throw new Error('Method not implemented.');
 }
+
 loadData($event: TableLazyLoadEvent) {
 throw new Error('Method not implemented.');
 }
 
-  constructor() { }
+  constructor(private _router:Router) { }
 
   ngOnInit() {
 

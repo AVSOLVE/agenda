@@ -6,7 +6,7 @@
       icon="pi pi-plus"
       label="Novo"
       type="button"
-      (click)="showDialog()"></button>
+      (click)="create()"></button>
     <button
       pButton
       class="p-button-secondary"
@@ -24,9 +24,6 @@
       [disabled]="toggleDeleteOnSelection"
       (click)="delete()"></button>
   </div>
-  <p-dialog [(visible)]="visible">
-<app-criar></app-criar>
-</p-dialog>
 
   <p-table
     breakpoint="680px"

@@ -1,0 +1,68 @@
+<section class="grid">
+  <p-panel header="Dados Básicos" class="col-12 mt-4" [collapsed]="false">
+    <section class="header">
+      <form [formGroup]="userForm" (ngSubmit)="save()">
+        <!-- header page -->
+        <div class="flex justify-content-between">
+          <h1 class="">Novo Usuário</h1>
+          <div class="flex justify-content-center">
+            <div class="flex gap-3">
+              <button
+                pButton
+                class="p-button-success"
+                icon="pi pi-save"
+                label="Salvar"
+                type="submit"
+                [disabled]="this.userForm.invalid"
+              ></button>
+              <button
+                pButton
+                class="p-button-warning"
+                icon="pi pi-times-circle"
+                label="Cancelar"
+                type="button"
+                (click)="cancel()"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <!-- content page -->
+        <section class="content pt-5 grid">
+          <div class="field p-float-label col-6">
+            <input
+              class="w-full"
+              pInputText
+              formControlName="name"
+              type="text"
+            />
+            <label>Nome</label>
+          </div>
+
+          <div class="field p-float-label col-6">
+            <input
+              class="w-full"
+              pInputText
+              formControlName="email"
+              type="email"
+              email="true"
+            />
+            <label>E-mail</label>
+          </div>
+
+          <div class="field p-float-label col-12">
+            <input
+              class="w-full"
+              pInputText
+              formControlName="email"
+              type="password"
+            />
+            <label>Senha</label>
+          </div>
+
+
+
+        </section>
+      </form>
+    </section>
+  </p-panel>
+</section>

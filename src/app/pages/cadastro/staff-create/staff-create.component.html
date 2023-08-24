@@ -1,7 +1,29 @@
 <section class="header">
   <form [formGroup]="userForm" (ngSubmit)="save()">
     <!-- header page -->
+    <div class="flex justify-content-between">
       <h1 class="">Novo Colaborador</h1>
+      <div class="flex justify-content-center">
+        <div class="flex gap-3">
+          <button
+            pButton
+            class="p-button-success"
+            icon="pi pi-save"
+            label="Salvar"
+            type="submit"
+            [disabled]="this.userForm.invalid"
+          ></button>
+          <button
+            pButton
+            class="p-button-warning"
+            icon="pi pi-times-circle"
+            label="Cancelar"
+            type="button"
+            (click)="cancel()"
+          ></button>
+        </div>
+      </div>
+    </div>
     <!-- content page -->
     <section class="content pt-5 grid">
       <div class="field p-float-label col-6">
@@ -51,6 +73,7 @@
         <p-multiSelect
           styleClass="w-full"
           formControlName="procedures"
+          [resetFilterOnHide]="true"
           [options]="services"
           optionLabel="name"
           placeholder="Serviços"
@@ -58,25 +81,5 @@
         <label>Serviços</label>
       </div>
     </section>
-    <div class="flex justify-content-center">
-      <div class="flex gap-3">
-        <button
-          pButton
-          class="p-button-success"
-          icon="pi pi-save"
-          label="Salvar"
-          type="submit"
-          [disabled]="this.userForm.invalid"
-        ></button>
-        <button
-          pButton
-          class="p-button-warning"
-          icon="pi pi-times-circle"
-          label="Cancelar"
-          type="button"
-          (click)="cancel()"
-        ></button>
-      </div>
-    </div>
   </form>
 </section>

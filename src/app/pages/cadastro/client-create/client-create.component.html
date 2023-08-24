@@ -1,7 +1,29 @@
 <section class="header">
   <form [formGroup]="userForm" (ngSubmit)="save()">
     <!-- header page -->
-      <h1 class="">Novo Usuário</h1>
+    <div class="flex justify-content-between">
+      <h1 class="">Novo Cliente</h1>
+      <div class="flex justify-content-center">
+        <div class="flex gap-3">
+          <button
+            pButton
+            class="p-button-success"
+            icon="pi pi-save"
+            label="Salvar"
+            type="submit"
+            [disabled]="this.userForm.invalid"
+          ></button>
+          <button
+            pButton
+            class="p-button-warning"
+            icon="pi pi-times-circle"
+            label="Cancelar"
+            type="button"
+            (click)="cancel()"
+          ></button>
+        </div>
+      </div>
+    </div>
     <!-- content page -->
     <section class="content pt-5 grid">
       <div class="field p-float-label col-6">
@@ -21,7 +43,11 @@
       </div>
 
       <div class="field p-float-label col-4">
-        <p-inputMask mask="(99) 9 9999-9999" styleClass="w-full" formControlName="phone"/>
+        <p-inputMask
+          mask="(99) 9 9999-9999"
+          styleClass="w-full"
+          formControlName="phone"
+        />
         <label>Telefone</label>
       </div>
 
@@ -47,25 +73,5 @@
         <label>Data Nasc.</label>
       </div>
     </section>
-    <div class="flex justify-content-center">
-      <div class="flex gap-3">
-        <button
-          pButton
-          class="p-button-success"
-          icon="pi pi-save"
-          label="Salvar"
-          type="submit"
-          [disabled]="this.userForm.invalid"
-        ></button>
-        <button
-          pButton
-          class="p-button-warning"
-          icon="pi pi-times-circle"
-          label="Cancelar"
-          type="button"
-          (click)="cancel()"
-        ></button>
-      </div>
-    </div>
   </form>
 </section>
