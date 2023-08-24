@@ -8,38 +8,52 @@ import { NameValueInterface } from "../shared/interfaces/NameValue.interface";
   styleUrls: ['./staff-create.component.css']
 })
 export class StaffCreateComponent implements OnInit {
-  userForm!: FormGroup<any>;
-  onSubmit() {
-    console.log(this.formGroup.value);
-  }
-
-  date!: NameValueInterface[];
-  hours!: NameValueInterface[];
+  genders!: NameValueInterface[];
   services!: NameValueInterface[];
-  formGroup!: FormGroup;
-  minimumDate = new Date();
-  name: any;
+  userForm!: FormGroup;
+  currentDate = new Date();
+
+  constructor() { }
 
   ngOnInit() {
-    this.hours = [
-      { name: 'Masculino', value: 'M' },
-      { name: 'Feminino', value: 'F' },
-      { name: 'Outro', value: 'O' },
+    this.clearUserForm();
+    this.setGenders();
+    this.setServices();
+  }
 
-    ];
-    this.services = [
-      { name: 'Fisioterapia1', value: '1' },
-      { name: 'Fisioterapia2', value: '2' },
-      { name: 'Fisioterapia3', value: '3' },
-      { name: 'Fisioterapia4', value: '4' },
-    ];
-
-    this.formGroup = new FormGroup({
+  clearUserForm(): void {
+    this.userForm = new FormGroup({
       name: new FormControl(''),
       phone: new FormControl(''),
       email: new FormControl(''),
-      sex: new FormControl(''),
-      selectedServices: new FormControl(''),
+      sexo: new FormControl(''),
+      data_nascimento: new FormControl(''),
+      procedures: new FormControl(''),
     });
+  }
+
+  setGenders():void{
+    this.genders = [
+      { name: 'Feminino', value: 'F' },
+      { name: 'Masculino', value: 'M' },
+      { name: 'Outro', value: 'O' },
+    ];
+  }
+
+  setServices():void{
+    this.services = [
+      { name: 'Fisioterapia', value: 'F' },
+      { name: 'Massoterapia', value: 'M' },
+      { name: 'Outro', value: 'O' },
+    ];
+  }
+
+  save() {
+    console.log(this.userForm.value);
+    this.clearUserForm()
+  }
+
+  cancel() {
+    throw new Error('Method not implemented.');
   }
 }

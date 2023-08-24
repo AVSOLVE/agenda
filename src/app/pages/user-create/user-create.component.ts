@@ -46,7 +46,4 @@ export class UserCreateComponent implements OnInit {
   cancel() {
     throw new Error('Method not implemented.');
   }
-
-
-
 }

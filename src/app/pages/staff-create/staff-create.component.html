@@ -1,58 +1,82 @@
-<form [formGroup]="userForm">
-  <p-card
-    header="Novo Colaborador"
-    styleClass="flex text-center w-5 m-auto shadow-7 gap-3"
-  >
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-      <input
-        pInputText
-        placeholder="Nome"
-        formControlName="name"
-        [required]="true"
-        type="text"
-        class="w-full mb-3 text-center"
-      />
-
-      <input
-        pInputText
-        placeholder="Telefone"
-        formControlName="phone"
-        [required]="true"
-        type="tel"
-        class="w-full mb-3 text-center"
-      />
-
-      <input
-        pInputText
-        placeholder="E-mail"
-        formControlName="email"
-        [required]="true"
-        type="email"
-        class="w-full mb-3 text-center"
-      />
-
-      <p-dropdown
-        styleClass="w-full mb-3"
-        placeholder="Sexo"
-        [required]="true"
-        formControlName="sex"
-        [options]="hours"
-        optionLabel="name"
-      ></p-dropdown>
-
-      <p-multiSelect
-        styleClass="w-full"
-        placeholder="Especialidades"
-        [options]="services"
-        formControlName="selectedServices"
-        optionLabel="name"
-      ></p-multiSelect>
-
-      <p-divider></p-divider>
-      <div class="flex flex-grow-1 justify-content-center gap-2">
-        <p-button type="submit" styleClass="p-button-success">Salvar</p-button>
-        <p-button styleClass="p-button-danger">Cancelar</p-button>
+<section class="header">
+  <form [formGroup]="userForm" (ngSubmit)="save()">
+    <!-- header page -->
+      <h1 class="">Novo Colaborador</h1>
+    <!-- content page -->
+    <section class="content pt-5 grid">
+      <div class="field p-float-label col-6">
+        <input class="w-full" pInputText formControlName="name" type="text" />
+        <label>Nome</label>
       </div>
-    </form>
-  </p-card>
-</form>
+
+      <div class="field p-float-label col-6">
+        <input
+          class="w-full"
+          pInputText
+          formControlName="email"
+          type="email"
+          email="true"
+        />
+        <label>E-mail</label>
+      </div>
+
+      <div class="field p-float-label col-4">
+        <p-inputMask mask="(99) 9 9999-9999" styleClass="w-full" formControlName="phone"/>
+        <label>Telefone</label>
+      </div>
+
+      <div class="field p-float-label col-4">
+        <p-dropdown
+          styleClass="w-full"
+          formControlName="sexo"
+          [options]="genders"
+          optionLabel="name"
+          placeholder="Sexo"
+        ></p-dropdown>
+        <label>Sexo</label>
+      </div>
+
+      <div class="field p-float-label col-4">
+        <p-calendar
+          styleClass="w-full"
+          dateFormat="dd/mm/yy"
+          formControlName="data_nascimento"
+          [maxDate]="currentDate"
+        >
+        </p-calendar>
+        <label>Data Nasc.</label>
+      </div>
+
+      <div class="field p-float-label col-12">
+        <p-multiSelect
+          styleClass="w-full"
+          formControlName="procedures"
+          [options]="services"
+          optionLabel="name"
+          placeholder="Serviços"
+        ></p-multiSelect>
+        <label>Serviços</label>
+      </div>
+    </section>
+    <div class="flex justify-content-center">
+      <div class="flex gap-3">
+        <button
+          pButton
+          class="p-button-success"
+          icon="pi pi-save"
+          label="Salvar"
+          type="submit"
+          [disabled]="this.userForm.invalid"
+        ></button>
+        <button
+          pButton
+          class="p-button-warning"
+          icon="pi pi-times-circle"
+          label="Cancelar"
+          type="button"
+          (click)="cancel()"
+        ></button>
+      </div>
+    </div>
+  </form>
+</section>
