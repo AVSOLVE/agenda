@@ -5,7 +5,6 @@ const mysql = require('mysql');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
-
 app.listen(3000, () => {
   console.log('server running');
 })
@@ -24,14 +23,18 @@ db.connect(err => {
   console.log('connected as id ' + db.threadId);
 });
 
-// RESET AUTO_INCREMENT AND ORGANIZE IDS
-const resetIndex = 'SET @count = 0;' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1;' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
+// QUERRIES
+let qryIndexReset = 'SET @count = 0;' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1;' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
+let qrySearchTableByNameEmail = 'SELECT * FROM ?? WHERE ?? like ? OR ?? like ?';
+let qrySearchTableById = 'SELECT * FROM ?? WHERE id = ?';
+let qrySearchTableAll = 'SELECT * FROM ??';
+let qryInsertTable = 'INSERT INTO ?? SET ?';
+let qryDeleteTable = 'DELETE FROM ?? WHERE id = ?';
+let qryUpdateTable = 'UPDATE ?? SET ? WHERE id = ?';
 
-// GETTERS
 app.get('/user', (req, res) => {
   const { table } = req.headers;
-  let qry = 'SELECT * FROM ??';
-  db.query(qry, [table], (err, result) => {
+  db.query(qrySearchTableAll, [table], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) {
       res.send({ message: 'all user data', data: result });
@@ -39,62 +42,64 @@ app.get('/user', (req, res) => {
   })
 })
 
-
-
 app.get('/user/:id', (req, res) => {
-  let qry = 'SELECT * FROM pessoa WHERE id = ' + req.params.id;
-  db.query(qry, (err, result) => {
+  db.query(qrySearchTableById, [req.params.id], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
     else { res.send({ message: 'data not found', data: result }); }
   })
 })
 
-// POSTERS
 app.post('/user', (req, res) => {
 
   const { table } = req.body;
   const { data } = { name, email, phone, gender, dob } = req.body;
+  const setName = '%' + data.name + '%';
+  const setEmail = '%' + data.email + '%';
 
-  db.query(resetIndex, [table, table, table])
-
-  var query = db.query('INSERT INTO ?? SET ?', [table, data], (err, result) => {
-
-    if (err) { console.log(err, 'erro'); }
-    if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
-    else { res.send({ message: 'data not found', data: result }); }
-  })
-
-  console.log(query.sql);
+  db.query(qryIndexReset, [table, table, table]);
+  db.query(qrySearchTableByNameEmail,
+    [table, 'name', setName, 'email', setEmail],
+    (err, result) => {
+      if (err) res.status(400).send('erro', err);
+      if (result.length > 0) {
+        if (result[0].name === data.name || result[0].email === data.email) console.log("Cliente já existe");
+        else {
+          console.log(data);
+          console.log("Cliente nao existe");
+          db.query(qryInsertTable, [table, data], (err, result) => {
+            if (err) { console.log(err, 'erro'); }
+            if (result.length > 0) res.status(200).send({ message: 'all user data', data: result });
+          })
+        }
+      }
+    })
 });
 
 // PUT
 app.put('/user/:id', (req, res) => {
-  const table = 'pessoa';
+  const { table } = req.body;
   const values = { name, email, phone, gender, dob } = req.body;
-  const id = req.params.id;
-  const qr = 'UPDATE ?? SET ? WHERE id = ?';
-
-  db.query(resetIndex, [table, table, table])
-
-  var query = db.query(qr, [table, values, id], (err, result) => {
-
+  db.query(resetIndex, [table, table, table]);
+  db.query(qryUpdateTable, [table, values, req.params.id], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
     else { res.send({ message: 'data not found', data: result }); }
   })
-  console.log(query.sql);
+  db.end();
 })
 
 // DELETE
 app.delete('/user/:id', (req, res) => {
   const { table } = req.headers;
-  let qry = 'DELETE FROM ?? WHERE id = ' +req.params.id;
-  db.query(qry, [table], (err, result) => {
+  db.query(qryDeleteTable, [table, req.params.id], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) {
       res.send({ message: 'all user data', data: result });
     } else res.send({ message: 'data not found', data: result });
   })
   db.query(resetIndex, [table, table, table])
+  db.end();
 })
+
+

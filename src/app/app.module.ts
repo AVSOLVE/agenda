@@ -13,7 +13,6 @@ import { StaffCreateComponent } from "./pages/cadastro/staff-create/staff-create
 import { FooterComponent } from "./pages/shared/footer/footer.component";
 import { MessageService } from "primeng/api";
 import { ClientCreateComponent } from "./pages/cadastro/client-create/client-create.component";
-import { MainServiceService } from "./pages/shared/MainService.service";
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { MainServiceService } from "./pages/shared/MainService.service";
   ],
   providers: [
     MessageService,
-    MainServiceService
   ],
   bootstrap: [AppComponent]
 })
