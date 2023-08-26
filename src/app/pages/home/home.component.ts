@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { TableHeaderCheckboxToggleEvent, TableLazyLoadEvent, TablePageEvent } from 'primeng/table';
+import { AppServiceService } from "src/app/AppService.service";
 
 interface Column {
   field: string;
@@ -14,90 +15,58 @@ interface Column {
 })
 
 export class HomeComponent {
-toggleDeleteOnSelection: any;
-
-
-delete() {
-throw new Error('Method not implemented.');
-}
-
-create() {
-  this._router.navigate(['/criar']);
-}
-
-update() {
-throw new Error('Method not implemented.');
-}
-
-rowData: any;
-toggleEditOnSelection: any;
-
-onHeaderCheckboxToggle($event: TableHeaderCheckboxToggleEvent) {
-throw new Error('Method not implemented.');
-}
-
-  selectedUser: any = null
+  selectedUser!: any;
+  agenda!: any[];
   cols!: Column[];
-  products!: any[];
+  rowData: any;
+  toggleEditOnSelection: any;
+  toggleDeleteOnSelection: any;
 
-
-onPage($event: TablePageEvent) {
-throw new Error('Method not implemented.');
-}
-
-loadData($event: TableLazyLoadEvent) {
-throw new Error('Method not implemented.');
-}
-
-  constructor(private _router:Router) { }
+  constructor(private _router: Router, private _appService: AppServiceService) { }
 
   ngOnInit() {
-
     this.cols = [
       { field: 'name', header: 'Nome' },
       { field: 'procedure', header: 'Procedimento' },
       { field: 'date', header: 'Data' },
-      { field: 'time', header: 'Horario' },
-      { field: 'inventoryStatus', header: 'Status' },
+      { field: 'hours', header: 'Horario' }
     ];
-    this.products = [
-      {
-        id: '1000',
-        date: '22/12/2015',
-        name: 'Alexandre Lima',
-        especialist: 'Dra. Dayanne',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        procedure: 'Fisioterapia',
-        time: 14,
-        inventoryStatus: 'Ativo',
-        rating: 5
-      },
-      {
-        id: '1000',
-        date: '22/12/2015',
-        name: 'Aline Silva',
-        especialist: 'Dra. Dayanne',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        procedure: 'Fisioterapia',
-        time: 14,
-        inventoryStatus: 'Ativo',
-        rating: 5
-      },
-      {
-        id: '1000',
-        date: '22/12/2015',
-        name: 'Pedro Pascal',
-        especialist: 'Dra. Dayanne',
-        image: 'bamboo-watch.jpg',
-        price: 65,
-        procedure: 'Fisioterapia',
-        time: 14,
-        inventoryStatus: 'Ativo',
-        rating: 5
-      },
+  }
 
-    ]
+  delete(): void {
+    const data = this.selectedUser[0].id;
+    const table = { table:'agenda'};
+    this._appService.deleteOne(data, table).subscribe({
+      next: (res) => {
+        this.loadData();
+      }
+    });
+  }
+
+  create() {
+    this._router.navigate(['/criar']);
+  }
+
+  update() {
+    throw new Error('Method not implemented.');
+  }
+
+
+  onHeaderCheckboxToggle($event: TableHeaderCheckboxToggleEvent) {
+    throw new Error('Method not implemented.');
+  }
+
+  onPage($event: TablePageEvent) {
+    throw new Error('Method not implemented.');
+  }
+
+  loadData(): void {
+    const table = { table: 'agenda' }
+    this._appService.loadAll(table)
+      .subscribe({
+        next: (res) => {
+          this.agenda = res.data;
+        }
+      });
   }
 }

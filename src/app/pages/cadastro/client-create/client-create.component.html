@@ -1,5 +1,5 @@
 <section class="header">
-  <form [formGroup]="userForm" (ngSubmit)="save()">
+  <form [formGroup]="userForm" (ngSubmit)="saveCliente()">
     <!-- header page -->
     <div class="flex justify-content-between">
       <h1 class="">Novo Cliente</h1>
@@ -54,9 +54,8 @@
       <div class="field p-float-label col-4">
         <p-dropdown
           styleClass="w-full"
-          formControlName="sexo"
+          formControlName="gender"
           [options]="genders"
-          optionLabel="name"
           placeholder="Sexo"
         ></p-dropdown>
         <label>Sexo</label>
@@ -66,7 +65,7 @@
         <p-calendar
           styleClass="w-full"
           dateFormat="dd/mm/yy"
-          formControlName="data_nascimento"
+          formControlName="dob"
           [maxDate]="currentDate"
         >
         </p-calendar>

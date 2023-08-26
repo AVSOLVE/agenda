@@ -36,11 +36,11 @@
     [resizableColumns]="true"
     [tableStyle]="{ 'min-width': '380px' }"
     [(selection)]="selectedUser"
-    (onLazyLoad)="loadData($event)"
+    (onLazyLoad)="loadData()"
     (onPage)="onPage($event)"
     (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
     [columns]="cols"
-    [value]="products"
+    [value]="agenda"
   >
     <ng-template pTemplate="header" let-columns>
       <tr>

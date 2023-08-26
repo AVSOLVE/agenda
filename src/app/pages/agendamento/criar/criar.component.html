@@ -1,7 +1,7 @@
 <section class="grid">
   <p-panel header="Dados Básicos" class="col-12 mt-4" [collapsed]="false">
     <section class="header">
-      <form [formGroup]="userForm" (ngSubmit)="save()">
+      <form [formGroup]="userForm" (ngSubmit)="saveAgenda()">
         <!-- header page -->
         <div class="flex justify-content-between">
           <h1 class="">Novo Agendamento</h1>
@@ -31,7 +31,7 @@
           <div class="field p-float-label col-6">
             <p-dropdown
               styleClass="w-full"
-              formControlName="nameClient"
+              formControlName="name"
               [resetFilterOnHide]="true"
               [filter]="true"
               [options]="clients"
@@ -58,7 +58,7 @@
             <p-calendar
               styleClass="w-full"
               dateFormat="dd/mm/yy"
-              formControlName="data_agendamento"
+              formControlName="date"
               [minDate]="currentDate"
             >
             </p-calendar>
@@ -69,7 +69,7 @@
           <div class="field p-float-label col-6">
             <p-dropdown
               styleClass="w-full"
-              formControlName="time"
+              formControlName="hours"
               [options]="hours"
               optionLabel="name"
               placeholder="Horário"

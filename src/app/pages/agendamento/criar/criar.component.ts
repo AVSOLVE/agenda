@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { NameValueInterface } from "../../shared/NameValue.interface";
+import { AppServiceService } from "src/app/AppService.service";
+import { Moment } from "moment";
 
-interface Time {
-  name: string;
-  code: string;
-}
 @Component({
   selector: 'app-criar',
   templateUrl: './criar.component.html',
@@ -15,79 +12,85 @@ interface Time {
 })
 
 export class CriarComponent implements OnInit {
-  clients!: NameValueInterface[];
-  hours!: NameValueInterface[];
-  procedures!: NameValueInterface[];
+  hours!: any[];
+  clients!: any[];
+  procedures!: any[];
   userForm!: FormGroup;
   currentDate = new Date();
 
-  constructor(private _router: Router) { }
+  constructor(
+    private _router: Router,
+    private _appService: AppServiceService
+  ) { }
 
   ngOnInit() {
     this.clearUserForm();
-    this.setClients();
-    this.setProcedures();
-    this.setHours();
+    this.loadClients();
+    this.loadProcedures();
+    this.loadHours();
   }
 
   clearUserForm(): void {
     this.userForm = new FormGroup({
-      nameClient: new FormControl(''),
-      data_agendamento: new FormControl(''),
+      name: new FormControl(''),
+      date: new FormControl(''),
       procedure: new FormControl(''),
-      time: new FormControl(''),
+      hours: new FormControl(''),
     });
-  }
-
-  setClients(): void {
-    this.clients = [
-      { name: 'Alexandre', value: '0' },
-      { name: 'Beatriz', value: '0' },
-      { name: 'Dayanne', value: '0' },
-      { name: 'Lais', value: '0' },
-      { name: 'Ronaldo', value: '0' },
-      { name: 'Samuel', value: '0' },
-    ];
-  }
-
-  setProcedures(): void {
-    this.procedures = [
-      { name: 'Acupuntura', value: '0' },
-      { name: 'Auriculoterapia', value: '0' },
-      { name: 'Fisio Ortopédica', value: '0' },
-      { name: 'Fisio Pélvica', value: '0' },
-      { name: 'Fisioterapia', value: '0' },
-      { name: 'Limpeza de Pele', value: '0' },
-      { name: 'Massoterapia', value: '0' },
-      { name: 'Pilates', value: '0' },
-      { name: 'RPG', value: '0' },
-    ];
-  }
-
-  setHours(): void {
-    this.hours = [
-      { name: '07 AM', value: '7' },
-      { name: '08 AM', value: '8' },
-      { name: '09 AM', value: '9' },
-      { name: '10 AM', value: '10' },
-      { name: '11 AM', value: '11' },
-      { name: '12 PM', value: '12' },
-      { name: '13 PM', value: '13' },
-      { name: '14 PM', value: '14' },
-      { name: '15 PM', value: '15' },
-      { name: '16 PM', value: '16' },
-      { name: '17 PM', value: '17' },
-    ];
-  }
-
-  save() {
-    console.log(this.userForm.value);
-    this.clearUserForm()
   }
 
   cancel() {
     this.clearUserForm();
     this._router.navigate(['/home'])
+  }
+
+  saveAgenda(): void {
+    const data = this.prepareData()
+    const table = 'agenda';
+    this._appService.saveOne(data, table).subscribe({});
+    this.clearUserForm();
+    this._router.navigate(['/home'])
+  }
+
+  prepareData() {
+    const data = {
+      name: this.userForm.value.name.name,
+      date: new Date(this.userForm.value.date),
+      procedure: this.userForm.value.procedure.name,
+      hours: this.userForm.value.hours.name,
+    };
+    return data;
+  }
+
+
+  loadClients(): void {
+    const table = { table: 'person' }
+    this._appService.loadAll(table)
+      .subscribe({
+        next: (res) => {
+          this.clients = res.data;
+        }
+      });
+  }
+
+  loadProcedures(): void {
+    const table = { table: 'procedures' }
+    this._appService.loadAll(table)
+      .subscribe({
+        next: (res) => {
+          this.procedures = res.data;
+        }
+      });
+  }
+
+  loadHours(): void {
+    const table = { table: 'hours' }
+    this._appService.loadAll(table)
+      .subscribe({
+        next: (res) => {
+          this.hours = res.data;
+        }
+      });
   }
 
 }

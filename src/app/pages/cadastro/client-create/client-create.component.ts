@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
 import { NameValueInterface } from "../../shared/NameValue.interface";
 import { Router } from "@angular/router";
+import { AppServiceService } from "src/app/AppService.service";
 
 @Component({
   selector: 'app-client-create',
@@ -10,15 +11,17 @@ import { Router } from "@angular/router";
 })
 
 export class ClientCreateComponent implements OnInit {
-  genders!: NameValueInterface[];
+  genders = ['Masculino','Feminino'];
   userForm!: FormGroup;
   currentDate = new Date();
 
-  constructor(private _router:Router) { }
+  constructor(
+    private _router: Router,
+    private _appService: AppServiceService
+    ) { }
 
   ngOnInit() {
     this.clearUserForm();
-    this.setGenders();
   }
 
   clearUserForm(): void {
@@ -26,22 +29,15 @@ export class ClientCreateComponent implements OnInit {
       name: new FormControl(''),
       phone: new FormControl(''),
       email: new FormControl(''),
-      sexo: new FormControl(''),
-      data_nascimento: new FormControl(''),
+      gender: new FormControl(''),
+      dob: new FormControl(''),
     });
   }
 
-  setGenders():void{
-    this.genders = [
-      { name: 'Feminino', value: 'F' },
-      { name: 'Masculino', value: 'M' },
-      { name: 'Outro', value: 'O' },
-    ];
-  }
-
-  save() {
-    console.log(this.userForm.value);
-    this.clearUserForm()
+  saveCliente(): void {
+    const data = this.userForm.value;
+    const table = 'person';
+    this._appService.saveOne(data, table).subscribe({});
   }
 
   cancel() {
