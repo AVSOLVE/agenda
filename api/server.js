@@ -111,18 +111,19 @@ app.post('/cadastrarAgendamento', (req, res) => {
 })
 
 // UPDATE
-app.put('/user/:id', (req, res) => {
+app.put('/atualizarAgendamento/:id', (req, res) => {
   const { table } = req.body;
-  const values = { name, email, phone, gender, dob } = req.body;
+  const { data } = { name, date, procedure, hours } = req.body;
+
   let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let updateDataQry = mysql.format(qryIndexReset, [table, values, req.params.id]);
+  let updateDataQry = mysql.format(qryUpdateTable, [table, data, req.params.id]);
+
   db.query(sortDataQry);
   db.query(updateDataQry, (err, result) => {
-    if (err) { console.log(err, 'erro'); }
+    if (err) throw err;
     if (result.length > 0) { res.send({ message: 'user updated', data: result }); }
-    else { res.send({ message: 'data not found' }); }
+    else res.send({ message: 'data not found' });
   })
-  db.end();
 })
 
 // DELETE

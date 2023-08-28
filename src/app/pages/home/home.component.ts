@@ -50,7 +50,7 @@ export class HomeComponent {
   }
 
   update() {
-    throw new Error('Method not implemented.');
+    this._router.navigate(['/editar'])
   }
 
 

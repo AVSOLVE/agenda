@@ -37,10 +37,16 @@ export class AppServiceService {
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 
-// MENU CADASTRO - CLIENTE - NOVO CLIENTE /cadastrar
+// MENU CADASTRO - AGENDAMENTO - NOVO AGENDAMENTO /cadastrar
   newAgenda(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
     const path = this.url + '/cadastrarAgendamento';
     return this._http.post<ClienteInterface[]>(path, { data, table });
+  }
+
+// MENU CADASTRO - AGENDAMENTO - NOVO AGENDAMENTO /cadastrar
+  updateAgenda(data: any = {}, table: any = {}, id: any = {}): Observable<ClienteInterface[]> {
+    const path = this.url + `/atualizarAgendamento/${id}`;
+    return this._http.put<ClienteInterface[]>(path, { data, table });
   }
 
   deleteOne(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
