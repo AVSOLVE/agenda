@@ -25,6 +25,7 @@ export class HomeComponent {
   constructor(private _router: Router, private _appService: AppServiceService) { }
 
   ngOnInit() {
+    this.loadData()
     this.cols = [
       { field: 'name', header: 'Nome' },
       { field: 'procedure', header: 'Procedimento' },
@@ -38,6 +39,7 @@ export class HomeComponent {
     const table = { table:'agenda'};
     this._appService.deleteOne(data, table).subscribe({
       next: (res) => {
+        this.selectedUser = null;
         this.loadData();
       }
     });
