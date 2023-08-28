@@ -13,6 +13,7 @@ import { StaffCreateComponent } from "./pages/cadastro/staff-create/staff-create
 import { FooterComponent } from "./pages/shared/footer/footer.component";
 import { MessageService } from "primeng/api";
 import { ClientCreateComponent } from "./pages/cadastro/client-create/client-create.component";
+import { ProcedureCreateComponent } from "./pages/cadastro/procedure-create/procedure-create.component";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ClientCreateComponent } from "./pages/cadastro/client-create/client-cre
     CadastrarComponent,
     UserCreateComponent,
     StaffCreateComponent,
-    FooterComponent
+    FooterComponent,
+    ProcedureCreateComponent
   ],
   imports: [
     PrimengModule,

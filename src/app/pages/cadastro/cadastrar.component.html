@@ -14,6 +14,11 @@
           *ngIf="event.index === 1"
         </app-staff-create>
       </p-tabPanel>
+      <p-tabPanel header="Procedimento">
+        <app-procedure-create>
+          *ngIf="event.index === 2"
+        </app-procedure-create>
+      </p-tabPanel>
     </p-tabView>
   </p-panel>
 </section>

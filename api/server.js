@@ -25,6 +25,7 @@ db.connect(err => {
 
 // QUERRIES
 let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
+let qrySearchTable1Field = 'SELECT ?? FROM ?? WHERE ?? LIKE ?';
 let qrySearchTable2Fields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTable4Fields = 'SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTableById = 'SELECT * FROM ?? WHERE id = ?';
@@ -32,9 +33,15 @@ let qrySearchTableAll = 'SELECT * FROM ??';
 let qryInsertTable = 'INSERT INTO ?? SET ?';
 let qryDeleteTable = 'DELETE FROM ?? WHERE id = ?';
 let qryUpdateTable = 'UPDATE ?? SET ? WHERE id = ?';
+let qrySortTable = 'SELECT ?? FROM ?? ORDER BY ?? ASC;';
 
 app.get('/user', (req, res) => {
+
   const { table } = req.headers;
+  let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
+
+  let qry = db.query(sortDataQry)
+  console.log(qry.sql);
   db.query(qrySearchTableAll, [table], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) {
@@ -43,13 +50,28 @@ app.get('/user', (req, res) => {
   })
 })
 
+
+app.get('/procedure', (req, res) => {
+
+  const { table } = req.headers;
+  let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
+
+  db.query(sortDataQry, (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) res.send({ message: 'all user data', data: result });
+    else res.send({ message: 'data not found', data: result });
+  })
+})
+
+
 app.get('/user/:id', (req, res) => {
   db.query(qrySearchTableById, [req.params.id], (err, result) => {
-    if (err) { console.log(err, 'erro'); }
+    if (err) throw err;
     if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
     else { res.send({ message: 'data not found', data: result }); }
   })
 })
+
 
 // MENU CADASTRO - CLIENTE
 app.post('/cadastrarUsuario', (req, res) => {
@@ -62,7 +84,7 @@ app.post('/cadastrarUsuario', (req, res) => {
   const field2 = 'email';
 
   let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, fieldA, setName, fieldB, setEmail]);
+  let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, field1, setName, field2, setEmail]);
   let insertDataQry = mysql.format(qryInsertTable, [table, data]);
 
   db.query(sortDataQry);
@@ -110,6 +132,31 @@ app.post('/cadastrarAgendamento', (req, res) => {
   })
 })
 
+// MENU PROCEDIMENTO
+app.post('/cadastrarProcedimento', (req, res) => {
+  const { table } = req.body;
+  const { data } = { name } = req.body;
+
+  const setName = '%' + data.name + '%';
+  const field1 = 'name';
+
+  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
+  let searchDataQry = mysql.format(qrySearchTable1Field, [field1, table, field1, setName]);
+  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
+
+  db.query(sortDataQry);
+  db.query(searchDataQry, (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) console.log("procedimento existente");
+    else {
+      db.query(insertDataQry, (error, result) => {
+        if (error) throw error;
+        if (result.length > 0) res.send({ message: 'procedimento inserido', data: result.insertId })
+      })
+    }
+  })
+})
+
 // UPDATE
 app.put('/atualizarAgendamento/:id', (req, res) => {
   const { table } = req.body;
@@ -127,7 +174,7 @@ app.put('/atualizarAgendamento/:id', (req, res) => {
 })
 
 // DELETE
-app.delete('/user/:id', (req, res) => {
+app.delete('/deletar/:id', (req, res) => {
   const { table } = req.headers;
   let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
   let deleteDataQry = mysql.format(qryDeleteTable, [table, req.params.id]);

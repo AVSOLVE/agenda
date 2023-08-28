@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
-import { NameValueInterface } from "../../shared/NameValue.interface";
 import { Router } from "@angular/router";
 import { AppServiceService } from "src/app/AppService.service";
 

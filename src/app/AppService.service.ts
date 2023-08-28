@@ -30,27 +30,38 @@ export class AppServiceService {
     const path = this.url + '/user';
     return this._http.get(path, { headers: data });
   }
+// PROCEDIMENTO - LOAD PROCEDIMENTO
+  loadProcedure(data: any = {}): Observable<any> {
+    const path = this.url + '/procedure';
+    return this._http.get(path, { headers: data });
+  }
 
-// MENU CADASTRO - CLIENTE - NOVO CLIENTE /cadastrar
+// CLIENTE - NOVO CLIENTE
   newUser(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
     const path = this.url + '/cadastrarUsuario';
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 
-// MENU CADASTRO - AGENDAMENTO - NOVO AGENDAMENTO /cadastrar
+  // CLIENTE - NOVO CLIENTE
+  newProcedure(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
+    const path = this.url + '/cadastrarProcedimento';
+    return this._http.post<ClienteInterface[]>(path, { data, table });
+  }
+
+// HOME - NOVO AGENDAMENTO
   newAgenda(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
     const path = this.url + '/cadastrarAgendamento';
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 
-// MENU CADASTRO - AGENDAMENTO - NOVO AGENDAMENTO /cadastrar
+// HOME - EDITAR AGENDAMENTO
   updateAgenda(data: any = {}, table: any = {}, id: any = {}): Observable<ClienteInterface[]> {
     const path = this.url + `/atualizarAgendamento/${id}`;
     return this._http.put<ClienteInterface[]>(path, { data, table });
   }
 
   deleteOne(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
-    const path = this.url + `/user/${data}`;
+    const path = this.url + `/deletar/${data}`;
     return this._http.delete<ClienteInterface[]>(path, { headers: table });
   }
 }
