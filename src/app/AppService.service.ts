@@ -31,8 +31,15 @@ export class AppServiceService {
     return this._http.get(path, { headers: data });
   }
 
-  saveOne(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
-    const path = this.url + '/person';
+// MENU CADASTRO - CLIENTE - NOVO CLIENTE /cadastrar
+  newUser(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
+    const path = this.url + '/cadastrarUsuario';
+    return this._http.post<ClienteInterface[]>(path, { data, table });
+  }
+
+// MENU CADASTRO - CLIENTE - NOVO CLIENTE /cadastrar
+  newAgenda(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
+    const path = this.url + '/cadastrarAgendamento';
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 

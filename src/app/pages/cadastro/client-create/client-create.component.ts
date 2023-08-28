@@ -37,7 +37,7 @@ export class ClientCreateComponent implements OnInit {
   saveCliente(): void {
     const data = this.userForm.value;
     const table = 'person';
-    this._appService.saveOne(data, table).subscribe({});
+    this._appService.newUser(data, table).subscribe({});
   }
 
   cancel() {

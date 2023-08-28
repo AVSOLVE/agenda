@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, LOCALE_ID, Inject } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AppServiceService } from "src/app/AppService.service";
-import { Moment } from "moment";
+import { formatDate } from "@angular/common";
 
 @Component({
   selector: 'app-criar',
@@ -20,7 +20,8 @@ export class CriarComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService
+    private _appService: AppServiceService,
+    @Inject(LOCALE_ID) public locale: string
   ) { }
 
   ngOnInit() {
@@ -47,15 +48,16 @@ export class CriarComponent implements OnInit {
   saveAgenda(): void {
     const data = this.prepareData()
     const table = 'agenda';
-    this._appService.saveOne(data, table).subscribe({});
+    this._appService.newAgenda(data, table).subscribe({});
     this.clearUserForm();
     this._router.navigate(['/home'])
   }
 
   prepareData() {
+    const date = formatDate(this.userForm.value.date,'dd/MM/yyyy', this.locale )
     const data = {
       name: this.userForm.value.name.name,
-      date: new Date(this.userForm.value.date),
+      date: date,
       procedure: this.userForm.value.procedure.name,
       hours: this.userForm.value.hours.name,
     };

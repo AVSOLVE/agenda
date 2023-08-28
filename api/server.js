@@ -25,7 +25,8 @@ db.connect(err => {
 
 // QUERRIES
 let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
-let qrySearchTableByFields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
+let qrySearchTable2Fields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
+let qrySearchTable4Fields = 'SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTableById = 'SELECT * FROM ?? WHERE id = ?';
 let qrySearchTableAll = 'SELECT * FROM ??';
 let qryInsertTable = 'INSERT INTO ?? SET ?';
@@ -50,42 +51,76 @@ app.get('/user/:id', (req, res) => {
   })
 })
 
-app.post('/person', (req, res) => {
+// MENU CADASTRO - CLIENTE
+app.post('/cadastrarUsuario', (req, res) => {
   const { table } = req.body;
   const { data } = { name, email, phone, gender, dob } = req.body;
 
   const setName = '%' + data.name + '%';
   const setEmail = '%' + data.email + '%';
-  const fieldA = 'name';
-  const fieldB = 'email';
+  const field1 = 'name';
+  const field2 = 'email';
 
   let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let searchDataQry = mysql.format(qrySearchTableByFields, [fieldA, fieldB, table, fieldA, setName, fieldB, setEmail]);
+  let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, fieldA, setName, fieldB, setEmail]);
   let insertDataQry = mysql.format(qryInsertTable, [table, data]);
 
   db.query(sortDataQry);
-  db.query(searchDataQry, (error, result) => {
-    if (error) throw error;
+  db.query(searchDataQry, (err, result) => {
+    if (err) throw err;
     if (result.length > 0) console.log("usuario existente");
     else {
       db.query(insertDataQry, (error, result) => {
         if (error) throw error;
-        if (result.length > 0) console.log(result.insertId)
+        if (result.length > 0) res.send({ message: 'user inserted', data: result.insertId })
       })
     }
   })
 })
 
+// MENU AGENDAMENTO
+app.post('/cadastrarAgendamento', (req, res) => {
+  const { table } = req.body;
+  const { data } = { name, date, procedure, hours } = req.body;
 
-// PUT
+  const setName = '%' + data.name + '%';
+  const setDate = '%' + data.date + '%';
+  const setProcedure = '%' + data.procedure + '%';
+  const setHours = '%' + data.hours + '%';
+  const field1 = 'name';
+  const field2 = 'date';
+  const field3 = 'procedure';
+  const field4 = 'hours';
+
+  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
+  let searchDataQry = mysql.format(qrySearchTable4Fields, [field1, field2, field3, field4, table, field1, setName, field2, setDate, field3, setProcedure, field4, setHours]);
+  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
+
+  db.query(sortDataQry);
+  db.query(searchDataQry, (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) console.log("agendamento existente");
+    else {
+      db.query(insertDataQry, (error, result) => {
+        console.log("agendamento inexistente");
+        if (error) throw error;
+        if (result.length > 0) res.send({ message: 'user inserted', data: result.insertId })
+      })
+    }
+  })
+})
+
+// UPDATE
 app.put('/user/:id', (req, res) => {
   const { table } = req.body;
   const values = { name, email, phone, gender, dob } = req.body;
-  db.query(resetIndex, [table, table, table]);
-  db.query(qryUpdateTable, [table, values, req.params.id], (err, result) => {
+  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
+  let updateDataQry = mysql.format(qryIndexReset, [table, values, req.params.id]);
+  db.query(sortDataQry);
+  db.query(updateDataQry, (err, result) => {
     if (err) { console.log(err, 'erro'); }
-    if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
-    else { res.send({ message: 'data not found', data: result }); }
+    if (result.length > 0) { res.send({ message: 'user updated', data: result }); }
+    else { res.send({ message: 'data not found' }); }
   })
   db.end();
 })
@@ -93,14 +128,15 @@ app.put('/user/:id', (req, res) => {
 // DELETE
 app.delete('/user/:id', (req, res) => {
   const { table } = req.headers;
-  db.query(qryDeleteTable, [table, req.params.id], (err, result) => {
-    if (err) { console.log(err, 'erro'); }
-    if (result.length > 0) {
-      res.send({ message: 'all user data', data: result });
-    } else res.send({ message: 'data not found', data: result });
+  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
+  let deleteDataQry = mysql.format(qryDeleteTable, [table, req.params.id]);
+
+  db.query(deleteDataQry, (err, result) => {
+    if (err) throw err
+    if (result.length > 0) res.send({ message: 'data deleted', data: result.affectedRows });
+    else res.send({ message: 'data not found' });
   })
-  db.query(resetIndex, [table, table, table])
-  db.end();
+  db.query(sortDataQry)
 })
 
 
