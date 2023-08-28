@@ -32,7 +32,7 @@ export class AppServiceService {
   }
 
   saveOne(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
-    const path = this.url + '/user';
+    const path = this.url + '/person';
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 

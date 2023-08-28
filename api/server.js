@@ -24,8 +24,8 @@ db.connect(err => {
 });
 
 // QUERRIES
-let qryIndexReset = 'SET @count = 0;' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1;' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
-let qrySearchTableByNameEmail = 'SELECT * FROM ?? WHERE ?? like ? OR ?? like ?';
+let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
+let qrySearchTableByFields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTableById = 'SELECT * FROM ?? WHERE id = ?';
 let qrySearchTableAll = 'SELECT * FROM ??';
 let qryInsertTable = 'INSERT INTO ?? SET ?';
@@ -50,31 +50,32 @@ app.get('/user/:id', (req, res) => {
   })
 })
 
-app.post('/user', (req, res) => {
-
+app.post('/person', (req, res) => {
   const { table } = req.body;
   const { data } = { name, email, phone, gender, dob } = req.body;
+
   const setName = '%' + data.name + '%';
   const setEmail = '%' + data.email + '%';
+  const fieldA = 'name';
+  const fieldB = 'email';
 
-  db.query(qryIndexReset, [table, table, table]);
-  db.query(qrySearchTableByNameEmail,
-    [table, 'name', setName, 'email', setEmail],
-    (err, result) => {
-      if (err) res.status(400).send('erro', err);
-      if (result.length > 0) {
-        if (result[0].name === data.name || result[0].email === data.email) console.log("Cliente já existe");
-        else {
-          console.log(data);
-          console.log("Cliente nao existe");
-          db.query(qryInsertTable, [table, data], (err, result) => {
-            if (err) { console.log(err, 'erro'); }
-            if (result.length > 0) res.status(200).send({ message: 'all user data', data: result });
-          })
-        }
-      }
-    })
-});
+  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
+  let searchDataQry = mysql.format(qrySearchTableByFields, [fieldA, fieldB, table, fieldA, setName, fieldB, setEmail]);
+  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
+
+  db.query(sortDataQry);
+  db.query(searchDataQry, (error, result) => {
+    if (error) throw error;
+    if (result.length > 0) console.log("usuario existente");
+    else {
+      db.query(insertDataQry, (error, result) => {
+        if (error) throw error;
+        if (result.length > 0) console.log(result.insertId)
+      })
+    }
+  })
+})
+
 
 // PUT
 app.put('/user/:id', (req, res) => {
