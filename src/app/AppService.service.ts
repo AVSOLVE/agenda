@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 
@@ -42,7 +42,7 @@ export class AppServiceService {
     return this._http.post<ClienteInterface[]>(path, { data, table });
   }
 
-  // CLIENTE - NOVO CLIENTE
+  // PROCEDIMENTO - NOVO PROCEDIMENTO
   newProcedure(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
     const path = this.url + '/cadastrarProcedimento';
     return this._http.post<ClienteInterface[]>(path, { data, table });
