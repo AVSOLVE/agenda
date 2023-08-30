@@ -38,7 +38,7 @@ export class ProcedureCreateComponent implements OnInit {
   saveProcedure(): void {
     const data = this.userForm.value;
     const table = 'procedures';
-    this._appService.newProcedure(data, table).subscribe({
+    this._appService.save(data, table).subscribe({
       next: (res) => {
         this.showToast('success', 'Successo!', res.message);
         this.ngOnInit();
@@ -51,7 +51,8 @@ export class ProcedureCreateComponent implements OnInit {
 
   loadProcedures(): void {
     const table = { table: 'procedures' }
-    this._appService.loadProcedure(table)
+    const route = 'procedure';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.procedures = res.data;

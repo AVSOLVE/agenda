@@ -48,8 +48,7 @@ export class EditarComponent {
   updateAgenda(): void {
     const data = this.prepareData();
     const table = 'agenda';
-    const id = '3';
-    this._appService.updateAgenda(data, table, id).subscribe({});
+    this._appService.update(table, data).subscribe({});
     this.clearUserForm();
     this._router.navigate(['/home'])
   }
@@ -68,7 +67,8 @@ export class EditarComponent {
 
   loadClients(): void {
     const table = { table: 'person' }
-    this._appService.loadAll(table)
+    const route = 'user';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.clients = res.data;
@@ -78,7 +78,8 @@ export class EditarComponent {
 
   loadProcedures(): void {
     const table = { table: 'procedures' }
-    this._appService.loadAll(table)
+    const route = 'procedure';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.procedures = res.data;
@@ -88,7 +89,8 @@ export class EditarComponent {
 
   loadHours(): void {
     const table = { table: 'hours' }
-    this._appService.loadAll(table)
+    const route = 'hours';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.hours = res.data;

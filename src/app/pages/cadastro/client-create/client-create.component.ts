@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
 import { AppServiceService } from "src/app/AppService.service";
 
 @Component({
@@ -10,17 +11,22 @@ import { AppServiceService } from "src/app/AppService.service";
 })
 
 export class ClientCreateComponent implements OnInit {
-  genders = ['Masculino','Feminino'];
+  genders = ['Masculino', 'Feminino'];
   userForm!: FormGroup;
   currentDate = new Date();
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService
+    private _appService: AppServiceService,
+    private _messageService: MessageService
   ) { }
 
   ngOnInit() {
     this.clearUserForm();
+  }
+
+  showToast(severity: string, summary: string, detail: any): void {
+    this._messageService.add({ severity, summary, detail });
   }
 
   clearUserForm(): void {
@@ -36,11 +42,16 @@ export class ClientCreateComponent implements OnInit {
   saveCliente(): void {
     const data = this.userForm.value;
     const table = 'person';
-    this._appService.newUser(data, table).subscribe({
-      next: () =>{}
+    this._appService.save(data, table).subscribe({
+      next: (res) => {
+        this.showToast('success', 'Sucesso!', res.message)
+        this.clearUserForm();
+        this._router.navigate(['/cadastrar']);
+      },
+      error: (err) => {
+        this.showToast('error', 'Erro!', err.error.message);
+      }
     });
-    this.clearUserForm();
-    this._router.navigate(['/cadastrar']);
   }
 
   cancel() {

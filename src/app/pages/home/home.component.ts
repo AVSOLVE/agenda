@@ -37,7 +37,7 @@ export class HomeComponent {
   delete(): void {
     const data = this.selectedUser[0].id;
     const table = { table:'agenda'};
-    this._appService.deleteOne(data, table).subscribe({
+    this._appService.delete(table, data).subscribe({
       next: (res) => {
         this.selectedUser = null;
         this.loadData();
@@ -53,7 +53,6 @@ export class HomeComponent {
     this._router.navigate(['/editar'])
   }
 
-
   onHeaderCheckboxToggle($event: TableHeaderCheckboxToggleEvent) {
     throw new Error('Method not implemented.');
   }
@@ -63,8 +62,9 @@ export class HomeComponent {
   }
 
   loadData(): void {
-    const table = { table: 'agenda' }
-    this._appService.loadAll(table)
+    const table = { table: 'agenda' };
+    const route = 'procedure';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.agenda = res.data;

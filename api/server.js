@@ -35,152 +35,108 @@ let qryDeleteTable = 'DELETE FROM ?? WHERE id = ?';
 let qryUpdateTable = 'UPDATE ?? SET ? WHERE id = ?';
 let qrySortTable = 'SELECT ?? FROM ?? ORDER BY ?? ASC;';
 
-app.get('/user', (req, res) => {
 
+// GET ANY
+app.get('/:id', (req, res) => {
   const { table } = req.headers;
-  let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
+  db.query(qrySortTable, ['name', table, 'name'])
 
-  db.query(sortDataQry)
-  db.query(qrySearchTableAll, [table], (err, result) => {
-    if (err) { console.log(err, 'erro'); }
-    if (result.length > 0) {
-      res.send({ message: 'all user data', data: result });
-    } else res.send({ message: 'data not found', data: result });
-  })
+  if (req.params.id === 'user' || req.params.id === 'agenda' || req.params.id === 'procedure' || req.params.id === 'hours') {
+    db.query(qrySearchTableAll, [table], (err, result) => {
+      if (err) res.status(400).send({ message: 'Dados não carregados!' });
+      else res.status(200).send({ message: 'Dados carregados!', data: result });
+    })
+  }
+  else {
+    db.query(qrySearchTableById, [req.params.id], (err, result) => {
+      if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não carregados!' });
+      else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' carregados!' });
+    })
+  }
 })
 
-app.get('/procedure', (req, res) => {
-
+// DELETE ANY
+app.delete('/:id', (req, res) => {
   const { table } = req.headers;
-  let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
-
-  db.query(sortDataQry, (err, result) => {
-    if (err) res.status(400).send({ message: 'Procedimentos não carregados!' });
-    if (result.length > 0) res.status(200).send({ message: 'Procedimentos carregados!', data: result });
-    else res.send({ message: 'Dados não encontrados!', data: result });
-  })
-})
-
-app.get('/user/:id', (req, res) => {
-  db.query(qrySearchTableById, [req.params.id], (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) { res.send({ message: 'all user data', data: result }); }
-    else { res.send({ message: 'data not found', data: result }); }
-  })
-})
-
-// MENU CADASTRO - CLIENTE
-app.post('/cadastrarUsuario', (req, res) => {
-  const { table } = req.body;
-  const { data } = { name, email, phone, gender, dob } = req.body;
-
-  const setName = '%' + data.name + '%';
-  const setEmail = '%' + data.email + '%';
-  const field1 = 'name';
-  const field2 = 'email';
-
-  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, field1, setName, field2, setEmail]);
-  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
-
-  db.query(sortDataQry);
-  db.query(searchDataQry, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) console.log("usuario existente");
-    else {
-      db.query(insertDataQry, (error, result) => {
-        if (error) throw error;
-        if (result.length > 0) res.send({ message: 'user inserted', data: result.insertId })
-      })
-    }
-  })
-})
-
-// MENU AGENDAMENTO
-app.post('/cadastrarAgendamento', (req, res) => {
-  const { table } = req.body;
-  const { data } = { name, date, procedure, hours } = req.body;
-
-  const setName = '%' + data.name + '%';
-  const setDate = '%' + data.date + '%';
-  const setProcedure = '%' + data.procedure + '%';
-  const setHours = '%' + data.hours + '%';
-  const field1 = 'name';
-  const field2 = 'date';
-  const field3 = 'procedure';
-  const field4 = 'hours';
-
-  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let searchDataQry = mysql.format(qrySearchTable4Fields, [field1, field2, field3, field4, table, field1, setName, field2, setDate, field3, setProcedure, field4, setHours]);
-  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
-
-  db.query(sortDataQry);
-  db.query(searchDataQry, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) console.log("agendamento existente");
-    else {
-      db.query(insertDataQry, (error, result) => {
-        console.log("agendamento inexistente");
-        if (error) throw error;
-        if (result.length > 0) res.send({ message: 'user inserted', data: result.insertId })
-      })
-    }
-  })
-})
-
-// MENU PROCEDIMENTO
-app.post('/cadastrarProcedimento', (req, res) => {
-  const { data, table } = req.body;
-
-  const setName = '%' + data.name + '%';
-  const field1 = 'name';
-
-  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let searchDataQry = mysql.format(qrySearchTable1Field, [field1, table, field1, setName]);
-  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
-
-  db.query(sortDataQry);
-  db.query(searchDataQry, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) res.status(400).send({ message: 'Procedimento existente' })
-    else {
-      db.query(insertDataQry, (err, result) => {
-        if (err) throw err;
-        if (result.length > 0) res.status(200).send({ message: 'Procedimento cadastrado',data: result });
-        else res.status(202).send({ message: 'Procedimento cadastrado!', data: result });
-      })
-    }
-  })
-})
-
-// UPDATE
-app.put('/atualizarAgendamento/:id', (req, res) => {
-  const { table } = req.body;
-  const { data } = { name, date, procedure, hours } = req.body;
-
-  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
-  let updateDataQry = mysql.format(qryUpdateTable, [table, data, req.params.id]);
-
-  db.query(sortDataQry);
-  db.query(updateDataQry, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) { res.send({ message: 'user updated', data: result }); }
-    else res.send({ message: 'data not found' });
-  })
-})
-
-// DELETE
-app.delete('/deletar/:id', (req, res) => {
-  const { table } = req.headers;
-  let sortDataQry = mysql.format(qryIndexReset, [table, table, table]);
   let deleteDataQry = mysql.format(qryDeleteTable, [table, req.params.id]);
 
   db.query(deleteDataQry, (err, result) => {
-    if (err) throw err
-    if (result.length > 0) res.send({ message: 'data deleted', data: result.affectedRows });
-    else res.send({ message: 'data not found' });
+    if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não deletados!' });
+    else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' deletados!' });
   })
-  db.query(sortDataQry)
+  db.query(qryIndexReset, [table, table, table])
 })
 
+// POST ANY
+app.post('/:id', (req, res) => {
+  const { data, table } = req.body;
+  const field1 = 'name';
+  const setName = '%' + data.name + '%';
+  const setEmail = '%' + data.email + '%';
+  const setDate = '%' + data.date + '%';
+  const setProcedure = '%' + data.procedure + '%';
+  const setHours = '%' + data.hours + '%';
+  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
+  db.query(qryIndexReset, [table, table, table]);
 
+
+  if (req.params.id === 'user') {
+    const field2 = 'email';
+    let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, field1, setName, field2, setEmail]);
+    db.query(searchDataQry, (err, result) => {
+      if (result.length > 0) res.status(400).send({ message: 'Usuário existente', data: result });
+      else {
+        db.query(insertDataQry, (err, result) => {
+          if (err) res.status(404).send({ message: 'Usuário não inserido!' });
+          else res.status(202).send({ message: 'Usuário cadastrado!', data: result });
+        })
+      }
+    })
+  }
+
+  if (req.params.id === 'agenda') {
+    const field2 = 'date';
+    const field3 = 'procedure';
+    const field4 = 'hours';
+
+    let searchDataQry = mysql.format(qrySearchTable4Fields, [field1, field2, field3, field4, table, field1, setName, field2, setDate, field3, setProcedure, field4, setHours]);
+
+    db.query(searchDataQry, (err, result) => {
+      if (result.length > 0) res.status(400).send({ message: 'Agendamento existente!', data: result });
+      else {
+        db.query(insertDataQry, (err, result) => {
+          if (err) res.status(404).send({ message: 'Agendamento não cadastrado!' });
+          else res.status(202).send({ message: 'Agendamento cadastrado!', data: result });
+        })
+      }
+    })
+  }
+
+  if (req.params.id === 'procedure') {
+
+    let searchDataQry = mysql.format(qrySearchTable1Field, [field1, table, field1, setName]);
+
+    db.query(searchDataQry, (err, result) => {
+      if (result.length > 0) res.status(400).send({ message: 'Procedimento existente' })
+      else {
+        db.query(insertDataQry, (err, result) => {
+          if (err) res.status(404).send({ message: 'Procedimento não cadastrado!' });
+          else res.status(202).send({ message: 'Procedimento cadastrado!', data: result });
+        })
+      }
+    })
+  }
+})
+
+// PUT ANY
+app.put('/:id', (req, res) => {
+  const { data, table } = req.body;
+
+  let updateDataQry = mysql.format(qryUpdateTable, [table, data, req.params.id]);
+
+  db.query(qryIndexReset, [table, table, table]);
+  db.query(updateDataQry, (err, result) => {
+    if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não atualizados!' });
+    else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' atualizados!' });
+  })
+})

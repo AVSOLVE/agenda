@@ -48,7 +48,7 @@ export class CriarComponent implements OnInit {
   saveAgenda(): void {
     const data = this.prepareData()
     const table = 'agenda';
-    this._appService.newAgenda(data, table).subscribe({});
+    this._appService.save(table, data).subscribe({});
     this.clearUserForm();
     this._router.navigate(['/home'])
   }
@@ -67,7 +67,8 @@ export class CriarComponent implements OnInit {
 
   loadClients(): void {
     const table = { table: 'person' }
-    this._appService.loadAll(table)
+    const route = 'user';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.clients = res.data;
@@ -77,7 +78,8 @@ export class CriarComponent implements OnInit {
 
   loadProcedures(): void {
     const table = { table: 'procedures' }
-    this._appService.loadAll(table)
+    const route = 'procedure';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.procedures = res.data;
@@ -87,7 +89,8 @@ export class CriarComponent implements OnInit {
 
   loadHours(): void {
     const table = { table: 'hours' }
-    this._appService.loadAll(table)
+    const route = 'hours';
+    this._appService.load(route, table)
       .subscribe({
         next: (res) => {
           this.hours = res.data;
