@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
+import { MessageService } from "primeng/api";
 import { AppServiceService } from "src/app/AppService.service";
 
 @Component({
@@ -15,12 +16,17 @@ export class ProcedureCreateComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService
+    private _appService: AppServiceService,
+    private _messageService: MessageService
   ) { }
 
   ngOnInit() {
     this.clearUserForm();
     this.loadProcedures();
+  }
+
+  showToast(severity: string, summary: string, detail: any): void {
+    this._messageService.add({ severity, summary, detail });
   }
 
   clearUserForm(): void {
@@ -34,7 +40,11 @@ export class ProcedureCreateComponent implements OnInit {
     const table = 'procedures';
     this._appService.newProcedure(data, table).subscribe({
       next: (res) => {
+        this.showToast('success', 'Successo!', res.message);
         this.ngOnInit();
+      },
+      error: (err) => {
+        this.showToast('error', 'Erro!', err.error.message);
       }
     });
   }
@@ -45,6 +55,10 @@ export class ProcedureCreateComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.procedures = res.data;
+          this.showToast('success', 'Successo!', res.message);
+        },
+        error: (err) => {
+          this.showToast('error', 'Erro!', err.error.message);
         }
       });
   }

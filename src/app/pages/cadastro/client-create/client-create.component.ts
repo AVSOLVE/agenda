@@ -17,7 +17,7 @@ export class ClientCreateComponent implements OnInit {
   constructor(
     private _router: Router,
     private _appService: AppServiceService
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.clearUserForm();
@@ -36,7 +36,11 @@ export class ClientCreateComponent implements OnInit {
   saveCliente(): void {
     const data = this.userForm.value;
     const table = 'person';
-    this._appService.newUser(data, table).subscribe({});
+    this._appService.newUser(data, table).subscribe({
+      next: () =>{}
+    });
+    this.clearUserForm();
+    this._router.navigate(['/cadastrar']);
   }
 
   cancel() {

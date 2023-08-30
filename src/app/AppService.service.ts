@@ -43,9 +43,9 @@ export class AppServiceService {
   }
 
   // PROCEDIMENTO - NOVO PROCEDIMENTO
-  newProcedure(data: any = {}, table: any = {}): Observable<ClienteInterface[]> {
+  newProcedure(data: any = {}, table: any = {}): Observable<any> {
     const path = this.url + '/cadastrarProcedimento';
-    return this._http.post<ClienteInterface[]>(path, { data, table });
+    return this._http.post(path, { data, table });
   }
 
 // HOME - NOVO AGENDAMENTO

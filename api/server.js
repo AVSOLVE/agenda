@@ -40,8 +40,7 @@ app.get('/user', (req, res) => {
   const { table } = req.headers;
   let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
 
-  let qry = db.query(sortDataQry)
-  console.log(qry.sql);
+  db.query(sortDataQry)
   db.query(qrySearchTableAll, [table], (err, result) => {
     if (err) { console.log(err, 'erro'); }
     if (result.length > 0) {
@@ -50,19 +49,17 @@ app.get('/user', (req, res) => {
   })
 })
 
-
 app.get('/procedure', (req, res) => {
 
   const { table } = req.headers;
   let sortDataQry = mysql.format(qrySortTable, ['name', table, 'name']);
 
   db.query(sortDataQry, (err, result) => {
-    if (err) throw err;
-    if (result.length > 0) res.send({ message: 'all user data', data: result });
-    else res.send({ message: 'data not found', data: result });
+    if (err) res.status(400).send({ message: 'Procedimentos não carregados!' });
+    if (result.length > 0) res.status(200).send({ message: 'Procedimentos carregados!', data: result });
+    else res.send({ message: 'Dados não encontrados!', data: result });
   })
 })
-
 
 app.get('/user/:id', (req, res) => {
   db.query(qrySearchTableById, [req.params.id], (err, result) => {
@@ -71,7 +68,6 @@ app.get('/user/:id', (req, res) => {
     else { res.send({ message: 'data not found', data: result }); }
   })
 })
-
 
 // MENU CADASTRO - CLIENTE
 app.post('/cadastrarUsuario', (req, res) => {
@@ -134,8 +130,7 @@ app.post('/cadastrarAgendamento', (req, res) => {
 
 // MENU PROCEDIMENTO
 app.post('/cadastrarProcedimento', (req, res) => {
-  const { table } = req.body;
-  const { data } = { name } = req.body;
+  const { data, table } = req.body;
 
   const setName = '%' + data.name + '%';
   const field1 = 'name';
@@ -147,11 +142,12 @@ app.post('/cadastrarProcedimento', (req, res) => {
   db.query(sortDataQry);
   db.query(searchDataQry, (err, result) => {
     if (err) throw err;
-    if (result.length > 0) console.log("procedimento existente");
+    if (result.length > 0) res.status(400).send({ message: 'Procedimento existente' })
     else {
-      db.query(insertDataQry, (error, result) => {
-        if (error) throw error;
-        if (result.length > 0) res.send({ message: 'procedimento inserido', data: result.insertId })
+      db.query(insertDataQry, (err, result) => {
+        if (err) throw err;
+        if (result.length > 0) res.status(200).send({ message: 'Procedimento cadastrado',data: result });
+        else res.status(202).send({ message: 'Procedimento cadastrado!', data: result });
       })
     }
   })

@@ -1,51 +1,51 @@
 <section class="header">
-      <form [formGroup]="userForm" (ngSubmit)="saveProcedure()">
-        <!-- header page -->
-        <div class="flex justify-content-between">
-          <h1 class="">Novo Procedimento</h1>
-          <div class="flex justify-content-center">
-            <div class="flex gap-3">
-              <button
-                pButton
-                class="p-button-success"
-                icon="pi pi-save"
-                label="Salvar"
-                type="submit"
-                [disabled]="this.userForm.invalid"
-              ></button>
-              <button
-                pButton
-                class="p-button-warning"
-                icon="pi pi-times-circle"
-                label="Cancelar"
-                type="button"
-                (click)="cancel()"
-              ></button>
-            </div>
-          </div>
+  <form [formGroup]="userForm" (ngSubmit)="saveProcedure()">
+    <!-- header page -->
+    <div class="flex justify-content-between">
+      <p-toast></p-toast>
+      <h1 class="">Novo Procedimento</h1>
+      <div class="flex justify-content-center">
+        <div class="flex gap-3">
+          <button
+            pButton
+            class="p-button-success"
+            icon="pi pi-save"
+            label="Salvar"
+            type="submit"
+            [disabled]="this.userForm.invalid"
+          ></button>
+          <button
+            pButton
+            class="p-button-warning"
+            icon="pi pi-times-circle"
+            label="Cancelar"
+            type="button"
+            (click)="cancel()"
+          ></button>
         </div>
-        <!-- content page -->
-        <section class="content pt-5 grid">
-          <div class="field p-float-label col-6">
-            <input
-              class="w-full"
-              pInputText
-              formControlName="name"
-              
-              type="text"
-            />
-            <label>Nome</label>
-          </div>
-        </section>
-      </form>
-      <div class="card flex ">
-        <p-virtualScroller [value]="procedures" class="border-1 surface-border border-round" [style]="{'width': '515px'}" scrollHeight="200px" [itemSize]="50">
-            <ng-template pTemplate="item" let-procedure>
-                <div class="flex align-items-center p-2 h-full">
-                    {{ procedure.name }}
-                </div>
-            </ng-template>
-        </p-virtualScroller>
+      </div>
     </div>
-
+    <!-- content page -->
+    <section class="content pt-5 grid">
+      <div class="field p-float-label col-6">
+        <input class="w-full" pInputText formControlName="name" type="text" />
+        <label>Nome</label>
+      </div>
     </section>
+  </form>
+  <div class="card flex">
+    <p-virtualScroller
+      [value]="procedures"
+      class="border-1 surface-border border-round"
+      [style]="{ width: '515px' }"
+      scrollHeight="200px"
+      [itemSize]="50"
+    >
+      <ng-template pTemplate="item" let-procedure>
+        <div class="flex align-items-center p-2 h-full">
+          {{ procedure.name }}
+        </div>
+      </ng-template>
+    </p-virtualScroller>
+  </div>
+</section>
