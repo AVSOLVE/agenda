@@ -80,19 +80,21 @@ app.post('/:id', (req, res) => {
   db.query(qryIndexReset, [table, table, table]);
 
 
-  if (req.params.id === 'user') {
+  if (req.params.id === 'clients' || req.params.id === 'staff' || req.params.id === 'users') {
     const field2 = 'email';
+    const msg = (req.params.id === 'clients' ? 'Cliente' : (req.params.id === 'staff' ? 'Colaborador' : 'Usuário'));
     let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, field1, setName, field2, setEmail]);
     db.query(searchDataQry, (err, result) => {
-      if (result.length > 0) res.status(400).send({ message: 'Usuário existente', data: result });
+      if (result.length > 0) res.status(400).send({ message: msg + ' existente', data: result });
       else {
         db.query(insertDataQry, (err, result) => {
-          if (err) res.status(404).send({ message: 'Usuário não inserido!' });
-          else res.status(202).send({ message: 'Usuário cadastrado!', data: result });
+          if (err) res.status(404).send({ message: msg + ' não cadastrado!' });
+          else res.status(202).send({ message: msg + ' cadastrado!', data: result });
         })
       }
     })
   }
+
 
   if (req.params.id === 'agenda') {
     const field2 = 'date';
