@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, LOCALE_ID, Inject } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { AppServiceService } from "src/app/AppService.service";
+import { appService } from "src/app/services/app.service";
 import { formatDate } from "@angular/common";
 
 @Component({
@@ -20,7 +20,7 @@ export class CriarComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService,
+    private _appService: appService,
     @Inject(LOCALE_ID) public locale: string
   ) { }
 
@@ -97,5 +97,4 @@ export class CriarComponent implements OnInit {
         }
       });
   }
-
 }

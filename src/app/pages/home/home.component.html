@@ -1,12 +1,12 @@
-<p-card>
-
+<!-- <p-card>
   <div class="flex justify-content-end pb-3 gap-3">
     <button
       pButton
       icon="pi pi-plus"
       label="Novo"
       type="button"
-      (click)="create()"></button>
+      (click)="create()"
+    ></button>
     <button
       pButton
       class="p-button-secondary"
@@ -14,7 +14,8 @@
       label="Editar"
       type="button"
       [disabled]="toggleEditOnSelection"
-      (click)="update()"></button>
+      (click)="update()"
+    ></button>
     <button
       pButton
       class="p-button-danger"
@@ -22,7 +23,8 @@
       label="Excluir"
       type="button"
       [disabled]="toggleDeleteOnSelection"
-      (click)="delete()"></button>
+      (click)="delete()"
+    ></button>
   </div>
 
   <p-table
@@ -47,7 +49,12 @@
         <th style="width: 2.25em" scope="col">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th [pSortableColumn]="col.field" class="text-center" scope="col" *ngFor="let col of columns">
+        <th
+          [pSortableColumn]="col.field"
+          class="text-center"
+          scope="col"
+          *ngFor="let col of columns"
+        >
           {{ col.header }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
         </th>
@@ -64,9 +71,9 @@
         <td class="text-center" *ngFor="let col of columns">
           <span class="p-column-title">{{ col.header }}: </span>
           <div [ngSwitch]="col.field">
-            <!-- <span *ngSwitchCase="'date'">
+            <span *ngSwitchCase="'date'">
               {{ rowData[col.field] | date : "MM/dd/yyyy" }}
-            </span> -->
+            </span>
             <span *ngSwitchDefault>
               {{ rowData[col.field] }}
             </span>
@@ -75,4 +82,269 @@
       </tr>
     </ng-template>
   </p-table>
-</p-card>
+</p-card> -->
+
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <p-toast></p-toast>
+
+      <p-table
+        #dt
+        [value]="agenda"
+        [columns]="cols"
+        responsiveLayout="scroll"
+        [rows]="10"
+        [globalFilterFields]="['name', 'procedure']"
+        [paginator]="true"
+        [rowsPerPageOptions]="[10, 20, 30]"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [(selection)]="selectedBookings"
+        selectionMode="multiple"
+        [rowHover]="true"
+        dataKey="id"
+      >
+        <ng-template pTemplate="caption">
+          <div
+            class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+          >
+            <div class="my-2">
+              <button
+                pButton
+                pRipple
+                label="Novo"
+                icon="pi pi-plus"
+                class="p-button-success mr-2"
+                (click)="openNew()"
+              ></button>
+              <button
+                pButton
+                pRipple
+                label="Deletar"
+                icon="pi pi-trash"
+                class="p-button-danger"
+                (click)="deleteSelectedBookings()"
+                [disabled]="!selectedBookings || !selectedBookings.length"
+              ></button>
+            </div>
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="onGlobalFilter(dt, $event)"
+                placeholder="Buscar..."
+                class="w-full sm:w-auto"
+              />
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="name">
+              Nome <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="procedure">
+              Procedimento <p-sortIcon field="procedure"></p-sortIcon>
+            </th>
+            <th pSortableColumn="date">
+              Data <p-sortIcon field="date"></p-sortIcon>
+            </th>
+            <th pSortableColumn="hours">
+              Horário <p-sortIcon field="hours"></p-sortIcon>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-booking>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="booking"></p-tableCheckbox>
+            </td>
+
+            <td style="min-width: 10rem">
+              <span class="p-column-title">Nome</span>
+              {{ booking.name }}
+            </td>
+
+            <td style="min-width: 10rem">
+              <span class="p-column-title">Procedimento</span>
+              {{ booking.procedure }}
+            </td>
+
+            <td style="min-width: 10rem">
+              <span class="p-column-title">Data</span>
+              {{ booking.date }}
+            </td>
+
+            <td style="min-width: 10rem">
+              <span class="p-column-title">Horário</span>
+              {{ booking.hours }}
+            </td>
+
+            <td>
+              <div class="flex">
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-success mr-2"
+                  (click)="editBooking(booking)"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-warning"
+                  (click)="deleteBooking(booking)"
+                ></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <p-dialog
+      [(visible)]="bookingDialog"
+      [style]="{ width: '800px' }"
+      header="Product Details"
+      [modal]="true"
+      class="p-fluid"
+    >
+      <ng-template pTemplate="content">
+        <div class="field">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            pInputText
+            id="name"
+            [(ngModel)]="booking.name"
+            required
+            autofocus
+            [ngClass]="{ 'ng-invalid ng-dirty': submitted && !booking.name }"
+          />
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !booking.name"
+            >Name is required.</small
+          >
+        </div>
+        <div class="field">
+          <p-dropdown
+            styleClass="w-full"
+            formControlName="procedure"
+            [resetFilterOnHide]="true"
+            [options]="procedures"
+            optionLabel="name"
+            [placeholder]="booking.procedure"
+          ></p-dropdown>
+        </div>
+        <div class="field">
+          <p-calendar
+            styleClass="w-full p-datepicker-inline"
+            dateFormat="dd/mm/yy"
+            formControlName="date"
+            [minDate]="currentDate"
+          >
+          </p-calendar>
+        </div>
+        <div class="field">
+          <p-dropdown
+            styleClass="w-full"
+            formControlName="hours"
+            [options]="hours"
+            optionLabel="name"
+            [placeholder]="booking.hours"
+          ></p-dropdown>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          label="Cancel"
+          icon="pi pi-times"
+          class="p-button-text"
+          (click)="hideDialog()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          label="Save"
+          icon="pi pi-check"
+          class="p-button-text"
+          (click)="saveProduct()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog
+      [(visible)]="deleteBookingDialog"
+      header="Confirm"
+      [modal]="true"
+      [style]="{ width: '450px' }"
+    >
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="booking"
+          >Are you sure you want to delete <b>{{ booking.name }}</b
+          >?</span
+        >
+      </div>
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          icon="pi pi-times"
+          class="p-button-text"
+          label="No"
+          (click)="deleteBookingDialog = false"
+        ></button>
+        <button
+          pButton
+          pRipple
+          icon="pi pi-check"
+          class="p-button-text"
+          label="Yes"
+          (click)="confirmDelete()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog
+      [(visible)]="deleteBookingsDialog"
+      header="Confirm"
+      [modal]="true"
+      [style]="{ width: '450px' }"
+    >
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span>Are you sure you want to delete selected products?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          icon="pi pi-times"
+          class="p-button-text"
+          label="No"
+          (click)="deleteBookingsDialog = false"
+        ></button>
+        <button
+          pButton
+          pRipple
+          icon="pi pi-check"
+          class="p-button-text"
+          label="Yes"
+          (click)="confirmDeleteSelected()"
+        ></button>
+      </ng-template>
+    </p-dialog>
+  </div>
+</div>

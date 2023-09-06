@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
-import { NameValueInterface } from "../../shared/NameValue.interface";
+import { NameValueInterface } from "../../../interfaces/NameValue.interface";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { AppServiceService } from "src/app/AppService.service";
+import { appService } from "src/app/services/app.service";
 
 @Component({
   selector: 'app-user-create',
@@ -18,7 +18,7 @@ export class UserCreateComponent implements OnInit {
 
   constructor(
     private _router:Router,
-    private _appService: AppServiceService,
+    private _appService: appService,
     private _messageService: MessageService
     ) { }
 

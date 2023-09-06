@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
-import { AppServiceService } from "src/app/AppService.service";
+import { appService } from "src/app/services/app.service";
 
 @Component({
   selector: 'app-client-create',
@@ -17,7 +17,7 @@ export class ClientCreateComponent implements OnInit {
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService,
+    private _appService: appService,
     private _messageService: MessageService
   ) { }
 

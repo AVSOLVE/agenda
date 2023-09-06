@@ -9,7 +9,7 @@ import { UserCreateComponent } from "./pages/cadastro/user-create/user-create.co
 
 const routes: Routes = [
   {
-    path: 'home', component: HomeComponent
+    path: 'agenda', component: HomeComponent
   },
   {
     path: 'login', component: LoginComponent
@@ -31,8 +31,11 @@ const routes: Routes = [
   },
 ];
 
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes)],
 exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

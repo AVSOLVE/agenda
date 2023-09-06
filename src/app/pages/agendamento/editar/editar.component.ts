@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewEncapsulation, LOCALE_ID, Inject } from '@angular/core';
 import { FormControl, FormGroup } from "@angular/forms";
 import { Router } from "@angular/router";
-import { AppServiceService } from "src/app/AppService.service";
 import { formatDate } from "@angular/common";
+import { appService } from "src/app/services/app.service";
 
 @Component({
   selector: 'app-editar',
@@ -20,7 +20,7 @@ export class EditarComponent {
 
   constructor(
     private _router: Router,
-    private _appService: AppServiceService,
+    private _appService: appService,
     @Inject(LOCALE_ID) public locale: string
   ) { }
 

@@ -215,4 +215,4 @@ import { RouterModule } from "@angular/router";
     VirtualScrollerModule,
   ]
 })
-export class PrimengModule { }
+export class PrimeNgModule { }
