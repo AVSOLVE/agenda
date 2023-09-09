@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from "@angular/forms";
-import { Router } from "@angular/router";
+import { Router } from "express";
 import { MessageService } from "primeng/api";
-import { Table, TableHeaderCheckboxToggleEvent, TablePageEvent } from 'primeng/table';
+import { TableHeaderCheckboxToggleEvent, TablePageEvent, Table } from "primeng/table";
 import { AgendaInterface, appService } from "src/app/services/app.service";
 
 interface Column {
@@ -11,12 +11,11 @@ interface Column {
 }
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-agenda',
+  templateUrl: './agenda.component.html',
+  styleUrls: ['./agenda.component.css']
 })
-
-export class HomeComponent {
+export class AgendaComponent implements OnInit {
   selectedUser!: any;
   agenda: AgendaInterface[] = [];
   cols!: Column[];
@@ -81,7 +80,7 @@ export class HomeComponent {
       });
   }
   loadClients(): void {
-    const table = { table: 'clients' }
+    const table = { table: 'users' }
     const route = 'user';
     this._appService.load(route, table)
       .subscribe({
@@ -114,26 +113,12 @@ export class HomeComponent {
     });
   }
 
-  create() {
-    this._router.navigate(['/criar']);
-  }
-
-  update() {
-    this._router.navigate(['/editar'])
-  }
-
   onHeaderCheckboxToggle($event: TableHeaderCheckboxToggleEvent) {
     throw new Error('Method not implemented.');
   }
 
   onPage($event: TablePageEvent) {
     throw new Error('Method not implemented.');
-  }
-
-  openNew() {
-    this.booking = {};
-    this.submitted = false;
-    this.bookingDialog = true;
   }
 
   deleteSelectedBookings() {
@@ -167,31 +152,6 @@ export class HomeComponent {
   hideDialog() {
     this.bookingDialog = false;
     this.submitted = false;
-  }
-
-  saveProduct() {
-    this.submitted = true;
-
-    if (this.booking.name?.trim()) {
-      if (this.booking.id) {
-        // @ts-ignore
-        this.booking.inventoryStatus = this.booking.inventoryStatus.value ? this.booking.inventoryStatus.value : this.booking.inventoryStatus;
-        this.bookings[this.findIndexById(this.booking.id)] = this.booking;
-        this._messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-      } else {
-        this.booking.id = this.createId();
-        this.booking.code = this.createId();
-        this.booking.image = 'product-placeholder.svg';
-        // @ts-ignore
-        this.booking.inventoryStatus = this.product.inventoryStatus ? this.product.inventoryStatus.value : 'INSTOCK';
-        this.bookings.push(this.booking);
-        this._messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-      }
-
-      this.bookings = [...this.bookings];
-      this.bookingDialog = false;
-      this.booking = {};
-    }
   }
 
   findIndexById(id: string): number {

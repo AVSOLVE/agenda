@@ -1,0 +1,16 @@
+.fisiocep-logo {
+  width: 3.5rem;
+  border-radius: 15px;
+}
+
+.svg-icons {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--dk-green)
+}
+
+.mini-card {
+  background-color: #a8c8c127;
+  border-radius: 15px;
+  color: var(--dk-green);
+}

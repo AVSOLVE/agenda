@@ -1,0 +1,91 @@
+
+:root {
+  --dk-green: #274d4c;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  /* background-color: #a8c8c127; */
+  background-color: #cc92944b;
+  border-radius: 50px;
+  box-shadow: 0 0 10px 8px 5px rgba(0, 0, 0, 0.572);
+  background: linear-gradient(270deg,#ffc5c7,#bbded658, #e4f2ef21);
+}
+
+.nav-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--dk-green);
+  text-decoration: none;
+}
+
+.nav-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dk-green);
+}
+.navbar-toggler-icon {
+  background-color: #274d4c79;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #61C0BF;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.gallery-owner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.501);
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  transition: ease-in-out 0.5s;
+  margin: 0;
+}
+.gallery-owner:hover {
+  transform: scale(101%);
+  box-shadow: 0px 0px 15px 8px rgba(0, 0, 0, 0.501);
+}
+
+.gallery-owner img {
+  width: 24vw;
+}
+
+.fisiocep-logo {
+  width: 4rem;
+  border-radius: 15px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.572);
+}
+
+.svg-icons {
+  width: 2rem;
+  height: 2rem;
+  fill: var(--dk-green)
+}
+
+.nav-item a {
+  color: var(--dk-green);
+}
+
+.mini-card {
+  background-color: #a8c8c127;
+  margin: 15px;
+  width: min(250px);
+  height: 12rem;
+  padding-top: 12px;
+  border-radius: 15px;
+  color: var(--dk-green);
+}

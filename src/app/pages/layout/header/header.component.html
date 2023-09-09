@@ -1,12 +1,13 @@
 <div class="flex justify-content-between shadow-3 p-3 m-3 border-round">
-  <div class="flex w-1 justify-content-between ml-3">
-    <div>FISIOCEP</div>
-    <button (click)="toggleSidebar()" class="p-link"><i class="pi pi-bars"></i></button>
+  <div class="flex w-1 gap-3 justify-content-between align-items-center ml-3" routerLink="/home">
+    <img class="w-4" src="../../../../assets/img/fisioceplogo.jpeg" alt="fisocep logo" >
+    <div class="text-2xl">FISIOCEP</div>
+    <!-- <button (click)="toggleSidebar()" class="p-link"><i class="pi pi-bars"></i></button> -->
   </div>
 
   <div class="header-menu flex gap-3 mr-3">
-      <button class="p-link"><i class="pi pi-calendar pr-2"></i><span>Calendar</span></button>
-      <button class="p-link"><i class="pi pi-user pr-2"></i><span>Profile</span></button>
-      <button class="p-link" [routerLink]=""><i class="pi pi-cog pr-2"></i><span>Settings</span></button>
+      <button class="p-link" routerLink="/agenda"><i class="pi pi-calendar pr-2"></i><span>Agenda</span></button>
+      <button class="p-link" routerLink="/cadastrar"><i class="pi pi-user pr-2"></i><span>Cadastrar</span></button>
+      <button class="p-link" routerLink="/login"><i class="pi pi-cog pr-2"></i><span>Serviços</span></button>
   </div>
 </div>

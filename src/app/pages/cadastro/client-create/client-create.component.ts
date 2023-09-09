@@ -41,7 +41,7 @@ export class ClientCreateComponent implements OnInit {
 
   save(): void {
     const data = this.userForm.value;
-    const table = 'clients';
+    const table = 'users';
     this._appService.save(table, data).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message)

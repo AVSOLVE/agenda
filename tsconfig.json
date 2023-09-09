@@ -19,6 +19,9 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    "paths": {
+      "stream": [ "./node_modules/stream-browserify" ]
+    },
     "lib": [
       "ES2022",
       "dom"

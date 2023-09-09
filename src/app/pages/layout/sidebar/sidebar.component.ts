@@ -21,14 +21,9 @@ export class SidebarComponent implements OnInit, OnChanges {
       {
         label: 'Home',
         items: [
-          { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/'] }
-        ]
-      },
-      {
-        label: 'UI Components',
-        items: [
-          { label: 'Agenda', icon: 'pi pi-fw pi-check-square', routerLink: ['/agenda'] },
-          { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/'] },
+          { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/'] },
+          { label: 'Agenda', icon: 'pi pi-fw pi-clock', routerLink: ['/agenda'] },
+          { label: 'Cadastrar', icon: 'pi pi-fw pi-plus', routerLink: ['/cadastrar'] },
           { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/'] },
           { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/'] },
           { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/'] },
