@@ -35,7 +35,6 @@ let qryDeleteTable = 'DELETE FROM ?? WHERE id = ?';
 let qryUpdateTable = 'UPDATE ?? SET ? WHERE id = ?';
 let qrySortTable = 'SELECT ?? FROM ?? ORDER BY ?? ASC;';
 
-
 // GET ANY
 app.get('/:id', (req, res) => {
   const { table } = req.headers;

@@ -13,7 +13,7 @@
         [rowsPerPageOptions]="[10, 20, 30]"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [(selection)]="selectedBookings"
+        [(selection)]="selectedUser"
         selectionMode="multiple"
         [rowHover]="true"
         dataKey="id"
@@ -37,8 +37,8 @@
                 label="Deletar"
                 icon="pi pi-trash"
                 class="p-button-danger"
-                (click)="deleteSelectedBookings()"
-                [disabled]="!selectedBookings || !selectedBookings.length"
+                (click)="delete()"
+                [disabled]="!selectedUser || !selectedUser.length"
               ></button>
             </div>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
@@ -115,7 +115,7 @@
                   pRipple
                   icon="pi pi-trash"
                   class="p-button-rounded p-button-warning gap-2"
-                  (click)="deleteBooking(booking)"
+                  (click)="delete()"
                 >DELETAR</button>
               </div>
             </td>
@@ -184,7 +184,6 @@
           label="Cancel"
           icon="pi pi-times"
           class="p-button-text"
-          (click)="hideDialog()"
         ></button>
         <button
           pButton
@@ -192,69 +191,6 @@
           label="Save"
           icon="pi pi-check"
           class="p-button-text"
-        ></button>
-      </ng-template>
-    </p-dialog>
-
-    <p-dialog
-      [(visible)]="deleteBookingDialog"
-      header="Confirm"
-      [modal]="true"
-      [style]="{ width: '450px' }"
-    >
-      <div class="flex align-items-center justify-content-center">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-        <span *ngIf="booking"
-          >Are you sure you want to delete <b>{{ booking.name }}</b
-          >?</span
-        >
-      </div>
-      <ng-template pTemplate="footer">
-        <button
-          pButton
-          pRipple
-          icon="pi pi-times"
-          class="p-button-text"
-          label="No"
-          (click)="deleteBookingDialog = false"
-        ></button>
-        <button
-          pButton
-          pRipple
-          icon="pi pi-check"
-          class="p-button-text"
-          label="Yes"
-          (click)="confirmDelete()"
-        ></button>
-      </ng-template>
-    </p-dialog>
-
-    <p-dialog
-      [(visible)]="deleteBookingsDialog"
-      header="Confirm"
-      [modal]="true"
-      [style]="{ width: '450px' }"
-    >
-      <div class="flex align-items-center justify-content-center">
-        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-        <span>Are you sure you want to delete selected products?</span>
-      </div>
-      <ng-template pTemplate="footer">
-        <button
-          pButton
-          pRipple
-          icon="pi pi-times"
-          class="p-button-text"
-          label="No"
-          (click)="deleteBookingsDialog = false"
-        ></button>
-        <button
-          pButton
-          pRipple
-          icon="pi pi-check"
-          class="p-button-text"
-          label="Yes"
-          (click)="confirmDeleteSelected()"
         ></button>
       </ng-template>
     </p-dialog>
