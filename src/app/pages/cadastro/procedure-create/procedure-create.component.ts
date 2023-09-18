@@ -56,7 +56,9 @@ export class ProcedureCreateComponent implements OnInit {
     this._appService.load(route, table)
       .subscribe({
         next: (res) => {
-          this.procedures = res.data;
+          let tempprocedures = res.data;
+          this.procedures = tempprocedures.sort()
+
           this.showToast('success', 'Successo!', res.message);
         },
         error: (err) => {

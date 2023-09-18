@@ -25,6 +25,7 @@ db.connect(err => {
 
 // QUERRIES
 let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
+let qryOrderAsc = 'SELECT ?? FROM ?? ORDER BY ?? ASC';
 let qrySearchTable1Field = 'SELECT ?? FROM ?? WHERE ?? LIKE ?';
 let qrySearchTable2Fields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTable4Fields = 'SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?';
@@ -38,14 +39,20 @@ let qrySortTable = 'SELECT ?? FROM ?? ORDER BY ?? ASC;';
 // GET ANY
 app.get('/:id', (req, res) => {
   const { table } = req.headers;
-  db.query(qrySortTable, ['name', table, 'name'])
+  const field1 = 'name';
+  db.query(qrySortTable, [field1, table, field1])
 
   if (req.params.id === 'user' || req.params.id === 'agenda' || req.params.id === 'procedure' || req.params.id === 'hours') {
     db.query(qrySearchTableAll, [table], (err, result) => {
       if (err) res.status(400).send({ message: 'Dados não carregados!' });
-      else res.status(200).send({ message: 'Dados carregados!', data: result });
+      else {
+          db.query(qryOrderAsc, [field1, table, field1], (err, result) => {
+          res.status(200).send({ message: 'Dados carregados!', data: result });
+        });
+      }
     })
   }
+  
   else {
     db.query(qrySearchTableById, [req.params.id], (err, result) => {
       if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não carregados!' });
@@ -53,6 +60,7 @@ app.get('/:id', (req, res) => {
     })
   }
 })
+
 
 // DELETE ANY
 app.delete('/:id', (req, res) => {
@@ -78,7 +86,6 @@ app.post('/:id', (req, res) => {
   let insertDataQry = mysql.format(qryInsertTable, [table, data]);
   db.query(qryIndexReset, [table, table, table]);
 
-
   if (req.params.id === 'clients' || req.params.id === 'staff' || req.params.id === 'users') {
     const field2 = 'email';
     const msg = (req.params.id === 'clients' ? 'Cliente' : (req.params.id === 'staff' ? 'Colaborador' : 'Usuário'));
@@ -93,7 +100,6 @@ app.post('/:id', (req, res) => {
       }
     })
   }
-
 
   if (req.params.id === 'agenda') {
     const field2 = 'date';
@@ -113,8 +119,7 @@ app.post('/:id', (req, res) => {
     })
   }
 
-  if (req.params.id === 'procedure') {
-
+  if (req.params.id === 'procedures') {
     let searchDataQry = mysql.format(qrySearchTable1Field, [field1, table, field1, setName]);
 
     db.query(searchDataQry, (err, result) => {
