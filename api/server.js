@@ -25,7 +25,7 @@ db.connect(err => {
 
 // QUERRIES
 let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
-let qryOrderAsc = 'SELECT ?? FROM ?? ORDER BY ?? ASC';
+let qryOrderAsc = 'SELECT * FROM ?? ORDER BY ?? ASC';
 let qrySearchTable1Field = 'SELECT ?? FROM ?? WHERE ?? LIKE ?';
 let qrySearchTable2Fields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
 let qrySearchTable4Fields = 'SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?';
@@ -46,13 +46,13 @@ app.get('/:id', (req, res) => {
     db.query(qrySearchTableAll, [table], (err, result) => {
       if (err) res.status(400).send({ message: 'Dados não carregados!' });
       else {
-          db.query(qryOrderAsc, [field1, table, field1], (err, result) => {
+          db.query(qryOrderAsc, [table, field1], (err, result) => {
           res.status(200).send({ message: 'Dados carregados!', data: result });
         });
       }
     })
   }
-  
+
   else {
     db.query(qrySearchTableById, [req.params.id], (err, result) => {
       if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não carregados!' });
