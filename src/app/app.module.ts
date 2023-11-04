@@ -34,8 +34,8 @@ import { AgendaComponent } from "./pages/agenda/agenda.component";
     SidebarComponent,
     LayoutComponent,
     HeroComponent,
-    AgendaComponent
-  ],
+    AgendaComponent,
+   ],
   imports: [
     PrimeNgModule,
   ],

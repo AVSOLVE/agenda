@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MessageService } from "primeng/api";
 import { appService } from "src/app/services/app.service";
+import { SelectParamsInterface } from "src/app/services/select-params.type";
 
 @Component({
   selector: 'app-procedure-create',
@@ -11,27 +12,33 @@ import { appService } from "src/app/services/app.service";
 })
 
 export class ProcedureCreateComponent implements OnInit {
-  procedures!: any[];
   userForm!: FormGroup;
+  procedures: SelectParamsInterface[] = [
+    {id: 1, value: '10', label: 'Fisio1'},
+    {id: 2, value: '20', label: 'Fisio2'},
+    {id: 3, value: '30', label: 'Fisio3'}
+  ]
 
   constructor(
+    private _fb: FormBuilder,
     private _router: Router,
     private _appService: appService,
     private _messageService: MessageService
   ) { }
 
   ngOnInit() {
-    this.clearUserForm();
-    this.loadProcedures();
+    this.loadForm();
+    // this.loadProcedures();
   }
 
   showToast(severity: string, summary: string, detail: any): void {
     this._messageService.add({ severity, summary, detail });
   }
 
-  clearUserForm(): void {
-    this.userForm = new FormGroup({
-      name: new FormControl('')
+  loadForm(): void {
+    this.userForm = this._fb.group({
+      value: null,
+      label:null,
     });
   }
 
@@ -48,7 +55,6 @@ export class ProcedureCreateComponent implements OnInit {
       }
     });
   }
-
 
   loadProcedures(): void {
     const table = { table: 'procedures' }
@@ -68,7 +74,7 @@ export class ProcedureCreateComponent implements OnInit {
   }
 
   cancel() {
-    this.clearUserForm();
+    this.loadForm();
     this._router.navigate(['/home'])
   }
 }

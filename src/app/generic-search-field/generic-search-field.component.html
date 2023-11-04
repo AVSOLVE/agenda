@@ -1,0 +1,32 @@
+<form class="generic-search-field col-12 form-style m-b-message px-0" [formGroup]="searchForm">
+  <div class="field p-float-label generic-search-field__content z-1">
+    <p-autoComplete
+      class="generic-search-field__content__search"
+      emptyMessage="Nenhuma item encontrado."
+      field="label"
+      formControlName="search"
+      [delay]="500"
+      [dropdown]="true"
+      [forceSelection]="true"
+      [minLength]="3"
+      [multiple]="config?.multiple || false"
+      [placeholder]="config?.placeholder || 'Pesquise'"
+      [size]="100"
+      [suggestions]="suggestions"
+      (onSelect)="selectItem($event)"
+      (completeMethod)="loadSuggestions($event)">
+    </p-autoComplete>
+
+    <label class="generic-search-field__content__label">{{ config?.label }}</label>
+    <app-error-message *ngIf="isInvalidSearch" [control]="inputSearch"> </app-error-message>
+    <div class="error-class-container" *ngIf="hasErrorRequest">
+      <p *ngIf="!isLoadingSuggestions">
+        {{ config?.errorMessage || 'Não foi possível obter os items.' }}
+        <span class="generic-search-field__content__tryAgain" (click)="clickLoadSuggestion()">
+          Tente novamente
+        </span>
+      </p>
+      <app-progress-spinner *ngIf="isLoadingSuggestions"> </app-progress-spinner>
+    </div>
+  </div>
+</form>
