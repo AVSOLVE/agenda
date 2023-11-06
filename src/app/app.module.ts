@@ -17,6 +17,14 @@ import { SidebarComponent } from "./pages/layout/sidebar/sidebar.component";
 import { LayoutComponent } from "./pages/layout/layout.component";
 import { HeroComponent } from "./pages/layout/hero/hero.component";
 import { AgendaComponent } from "./pages/agenda/agenda.component";
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { InputTextModule } from "primeng/inputtext";
+import { InputNumberModule } from "primeng/inputnumber";
+import { InputMaskModule } from "primeng/inputmask";
+import { InputSwitchModule } from "primeng/inputswitch";
 
 @NgModule({
   declarations: [
@@ -38,6 +46,13 @@ import { AgendaComponent } from "./pages/agenda/agenda.component";
    ],
   imports: [
     PrimeNgModule,
+    CommonModule,
+    FormsModule,
+    InputTextModule,
+    InputNumberModule,
+    InputMaskModule,
+    InputSwitchModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
   ],
   providers: [
     MessageService,

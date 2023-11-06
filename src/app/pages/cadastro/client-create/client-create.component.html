@@ -1,6 +1,6 @@
 <section class="header">
   <p-toast></p-toast>
-  <form [formGroup]="userForm" (ngSubmit)="save()">
+  <form [formGroup]="userForm">
     <!-- header page -->
     <div class="flex justify-content-between">
       <h1 class="">Novo Cliente</h1>
@@ -26,24 +26,56 @@
       </div>
     </div>
     <!-- content page -->
-    <section class="content pt-5 grid">
-      <div class="field p-float-label col-6">
-        <input class="w-full" pInputText formControlName="name" type="text" />
-        <label>Nome</label>
+    <section class="content pt-5 grid col-12">
+      <div class="field p-float-label col-3">
+        <p-inputMask
+          mask="999.999.999-99"
+          styleClass="w-full"
+          formControlName="cpf"
+          [required]="true"
+        />
+        <label>CPF</label>
+      </div>
+
+      <div class="field p-float-label col-3">
+        <p-inputMask
+          formControlName="dob"
+          mask="99/99/9999"
+          styleClass="w-full"
+          [required]="true"
+          (onBlur)="calculateAge()"
+        >
+        </p-inputMask>
+
+        <p-badge class="p-overlay-badge" [value]="value"></p-badge>
+        <label>Data Nascimento</label>
       </div>
 
       <div class="field p-float-label col-6">
         <input
           class="w-full"
           pInputText
+          formControlName="name"
+          type="text"
+          placeholder="Ex: Maria da Graça"
+          [required]="true"
+        />
+        <label>Nome Completo</label>
+      </div>
+
+      <div class="field p-float-label col-4">
+        <input
+          class="w-full"
+          pInputText
           formControlName="email"
           type="email"
+          placeholder="dayanne@agiclin.com.br"
           email="true"
         />
         <label>E-mail</label>
       </div>
 
-      <div class="field p-float-label col-4">
+      <div class="field p-float-label col-3">
         <p-inputMask
           mask="(99) 9 9999-9999"
           styleClass="w-full"
@@ -52,25 +84,78 @@
         <label>Telefone</label>
       </div>
 
-      <div class="field p-float-label col-4">
-        <p-dropdown
-          styleClass="w-full"
-          formControlName="gender"
+      <div class="col-5">
+        <p-selectButton
           [options]="genders"
-          placeholder="Sexo"
-        ></p-dropdown>
-        <label>Sexo</label>
+          formControlName="gender"
+          optionLabel="name"
+          optionValue="value"
+        ></p-selectButton>
       </div>
 
-      <div class="field p-float-label col-4">
-        <p-calendar
+      <div class="field p-float-label col-3">
+        <p-inputMask
+          mask="99999-999"
           styleClass="w-full"
-          dateFormat="dd/mm/yy"
-          formControlName="dob"
-          [maxDate]="currentDate"
-        >
-        </p-calendar>
-        <label>Data Nasc.</label>
+          formControlName="cep"
+          (onBlur)="getDataFromCEP()"
+        />
+        <label>CEP</label>
+      </div>
+
+      <div class="field p-float-label col-3">
+        <p-dropdown
+          styleClass="w-full"
+          placeholder="Ex: Tocantins"
+          formControlName="state"
+          optionValue="name"
+          optionLabel="name"
+          [options]="brazilianStates"
+        ></p-dropdown>
+        <label>Estado</label>
+      </div>
+
+      <div class="field p-float-label col-3">
+        <input
+          class="w-full"
+          pInputText
+          formControlName="city"
+          type="text"
+          placeholder="Ex: Palmas"
+        />
+        <label>Cidade</label>
+      </div>
+
+      <div class="field p-float-label col-3">
+        <input
+          class="w-full"
+          pInputText
+          formControlName="neighborhood"
+          type="text"
+          placeholder="Ex: Centro"
+        />
+        <label>Bairro</label>
+      </div>
+
+      <div class="field p-float-label col-8">
+        <input
+          class="w-full"
+          pInputText
+          formControlName="address"
+          type="text"
+          placeholder="Ex: Rua Marechal Deodoro"
+        />
+        <label>Endereço</label>
+      </div>
+      <div class="field p-float-label col-4">
+        <input
+          class="w-full"
+          pInputText
+          formControlName="address"
+          type="number"
+          placeholder="Ex: 123"
+        />
+        <label>Número</label>
       </div>
     </section>
   </form>

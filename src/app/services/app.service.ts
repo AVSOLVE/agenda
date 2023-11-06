@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -29,6 +29,16 @@ export class appService {
   load(table: any = {}, data: any = {}): Observable<any> {
     const path = this.url + `/${table}`;
     return this._http.get(path, { headers: data });
+  }
+
+  getDataFromCPF(data: any = {}): Observable<any> {
+    const path = 'https://api.nfse.io/NaturalPeople/Basicinfo/taxNumber' + `/${data.cpf}/${data.dob}`;
+    return this._http.get(path, { headers: data });
+  }
+
+  getDataFromCEP(data: string): Observable<any> {
+    const path = `https://viacep.com.br/ws/${data}/json/`;
+    return this._http.get(path);
   }
 
   save(table: any = {}, data: any = {}): Observable<any> {
