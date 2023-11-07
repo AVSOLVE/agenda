@@ -10,7 +10,7 @@ import { CadastrarComponent } from "./pages/cadastro/cadastrar.component";
 import { UserCreateComponent } from "./pages/cadastro/user-create/user-create.component";
 import { StaffCreateComponent } from "./pages/cadastro/staff-create/staff-create.component";
 import { FooterComponent } from "./pages/layout/footer/footer.component";
-import { MessageService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 import { ClientCreateComponent } from "./pages/cadastro/client-create/client-create.component";
 import { ProcedureCreateComponent } from "./pages/cadastro/procedure-create/procedure-create.component";
 import { SidebarComponent } from "./pages/layout/sidebar/sidebar.component";
@@ -56,6 +56,7 @@ import { InputSwitchModule } from "primeng/inputswitch";
   ],
   providers: [
     MessageService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

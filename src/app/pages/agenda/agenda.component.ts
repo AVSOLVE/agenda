@@ -7,46 +7,8 @@ import {
   Table,
 } from 'primeng/table';
 import { AgendaInterface, appService } from 'src/app/services/app.service';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewChild,
-  TemplateRef,
-  OnInit,
-} from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours,
-} from 'date-fns';
-import { Subject } from 'rxjs';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView,
-} from 'angular-calendar';
-import { EventColor } from 'calendar-utils';
+import { Component, OnInit } from '@angular/core';
 
-const colors: Record<string, EventColor> = {
-  red: {
-    primary: '#ad2121',
-    secondary: '#FAE3E3',
-  },
-  blue: {
-    primary: '#1e90ff',
-    secondary: '#D1E8FF',
-  },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA',
-  },
-};
 interface Column {
   field: string;
   header: string;
@@ -56,19 +18,6 @@ interface Column {
   selector: 'app-agenda',
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [
-    `
-      h3 {
-        margin: 0 0 10px;
-      }
-
-      pre {
-        background-color: #f5f5f5;
-        padding: 15px;
-      }
-    `,
-  ],
 })
 export class AgendaComponent implements OnInit {
   selectedUser!: any;
@@ -96,8 +45,7 @@ export class AgendaComponent implements OnInit {
   constructor(
     private _router: Router,
     private _appService: appService,
-    private _messageService: MessageService,
-    // private modal: NgbModal
+    private _messageService: MessageService // private modal: NgbModal
   ) {}
 
   ngOnInit() {
@@ -106,15 +54,6 @@ export class AgendaComponent implements OnInit {
     this.loadProcedures();
     this.loadHours();
 
-    this.day = new Date().getDay();
-    this.today = new Date().getDate();
-    this.year = new Date().getFullYear();
-    this.month = new Date().getMonth();
-
-    console.log(this.year, this.month, this.today, this.getWeekDay(3));
-
-    // this._appService.load().then(data => this.bookings = data);
-
     this.cols = [
       { field: 'name', header: 'Nome' },
       { field: 'procedure', header: 'Procedimento' },
@@ -122,7 +61,6 @@ export class AgendaComponent implements OnInit {
       { field: 'hours', header: 'Horario' },
     ];
   }
-
 
   getWeekDay(dayIndex: number) {
     const weekdays = [
@@ -206,7 +144,8 @@ export class AgendaComponent implements OnInit {
 
   editBooking(booking: AgendaInterface) {
     this.booking = { ...booking };
-    this.bookingDialog = true;
+    console.log(this.booking);
+
   }
 
   onGlobalFilter(table: Table, event: Event) {

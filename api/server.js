@@ -66,7 +66,6 @@ app.get('/:id', (req, res) => {
 app.delete('/:id', (req, res) => {
   const { table } = req.headers;
   let deleteDataQry = mysql.format(qryDeleteTable, [table, req.params.id]);
-
   db.query(deleteDataQry, (err, result) => {
     if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não deletados!' });
     else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' deletados!' });
@@ -137,12 +136,11 @@ app.post('/:id', (req, res) => {
 // PUT ANY
 app.put('/:id', (req, res) => {
   const { data, table } = req.body;
-
   let updateDataQry = mysql.format(qryUpdateTable, [table, data, req.params.id]);
 
   db.query(qryIndexReset, [table, table, table]);
   db.query(updateDataQry, (err, result) => {
-    if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não atualizados!' });
-    else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' atualizados!' });
+    if (err) res.status(400).send({ message: 'Dados do id: ' + req.params.id + ' não atualizados!' });
+    else res.status(200).send({ message: 'Dados do id: ' + req.params.id + ' atualizados!' });
   })
 })

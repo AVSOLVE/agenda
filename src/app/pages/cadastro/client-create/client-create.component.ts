@@ -100,7 +100,14 @@ export class ClientCreateComponent implements OnInit {
   }
 
   clearUserForm(): void {
-    this.userForm.reset();
+    this.userForm = new FormGroup({
+      name: new FormControl(''),
+      phone: new FormControl(''),
+      email: new FormControl(''),
+      gender: new FormControl(''),
+      dob: new FormControl(''),
+      cpf: new FormControl(''),
+    });
   }
 
   setUpForm(): void {

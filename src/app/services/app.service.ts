@@ -8,6 +8,7 @@ export interface ClienteInterface {
   email?: string;
   gender?: string;
   bob?: string;
+  message?: string;
 }
 export interface AgendaInterface {
   id?: string;
@@ -46,13 +47,13 @@ export class appService {
     return this._http.post(path, { data, table });
   }
 
-  update(table: any = {}, data: any = {}): Observable<ClienteInterface[]> {
-    const path = this.url + `/${table}`;
-    return this._http.put<ClienteInterface[]>(path, { data, table });
+  update(table: any = {}, data: any = {}): Observable<ClienteInterface> {
+    const path = this.url + `/${data.id}`;
+    return this._http.put<ClienteInterface>(path, { table, data });
   }
 
-  delete(table: any = {}, data: any = {}): Observable<ClienteInterface[]> {
-    const path = this.url + `/${data}`;
-    return this._http.delete<ClienteInterface[]>(path, { headers: table });
+  delete(table: any = {}, data: any = {}): Observable<ClienteInterface> {
+    const path = this.url + `/${data.id}`;
+    return this._http.delete<ClienteInterface>(path, { headers: table });
   }
 }
