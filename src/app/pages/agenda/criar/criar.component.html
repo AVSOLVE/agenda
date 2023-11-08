@@ -1,7 +1,7 @@
 <section class="grid">
   <p-panel header="Dados Básicos" class="col-12 mt-4" [collapsed]="false">
     <section class="">
-      <form [formGroup]="userForm" (ngSubmit)="saveAgenda()">
+      <form [formGroup]="userForm" (ngSubmit)="save()">
         <!-- header page -->
         <div class="flex justify-content-between">
           <h1 class="">Novo Agendamento</h1>
@@ -44,16 +44,16 @@
           <div class="field p-float-label col-6 flex">
             <p-dropdown
               styleClass="w-full"
-              formControlName="procedure"
+              formControlName="service"
               [resetFilterOnHide]="true"
               [filter]="true"
-              [options]="procedures"
+              [options]="services"
               optionLabel="name"
               placeholder="Procedimento"
             ></p-dropdown>
             <label>Procedimento</label>
             <div class="col-3 flex align-content-center">
-              <div *ngIf="this.userForm.get('procedure')"> Valor: R$ {{this.userForm.get('procedure')?.value?.id}}</div>
+              <div *ngIf="this.userForm.get('services')"> Valor: R$ {{this.userForm.get('services')?.value?.price}}</div>
             </div> </div>
 
           <div class="field p-float-label col-6">

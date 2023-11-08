@@ -83,7 +83,7 @@ export class ClientCreateComponent implements OnInit {
   }
 
   calculateAge(): string {
-    this.getDataFromCPF();
+    // this.getDataFromCPF();
     const convertedDate = this.convertDateFormat(
       this.userForm.get('dob')?.value
     );
@@ -99,17 +99,6 @@ export class ClientCreateComponent implements OnInit {
     this._messageService.add({ severity, summary, detail });
   }
 
-  clearUserForm(): void {
-    this.userForm = new FormGroup({
-      name: new FormControl(''),
-      phone: new FormControl(''),
-      email: new FormControl(''),
-      gender: new FormControl(''),
-      dob: new FormControl(''),
-      cpf: new FormControl(''),
-    });
-  }
-
   setUpForm(): void {
     this.userForm = this._fb.group({
       name: null,
@@ -123,6 +112,7 @@ export class ClientCreateComponent implements OnInit {
       city: null,
       neighborhood: null,
       address: null,
+      number: null,
     });
   }
 
@@ -151,8 +141,6 @@ export class ClientCreateComponent implements OnInit {
     const data = this.userForm.get('cep')?.value;
     this._appService.getDataFromCEP(data).subscribe({
       next: (res) => {
-        console.log(res);
-
         this.userForm.patchValue({
           state: this.getStateNameByCode(res.uf),
           city: res.localidade,
@@ -166,10 +154,11 @@ export class ClientCreateComponent implements OnInit {
   save(): void {
     const data = this.userForm.value;
     const table = 'users';
+    console.log(data);
+
     this._appService.save(table, data).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
-        this.clearUserForm();
         this._router.navigate(['/cadastrar']);
       },
       error: (err) => {
@@ -179,7 +168,6 @@ export class ClientCreateComponent implements OnInit {
   }
 
   cancel() {
-    this.clearUserForm();
     this._router.navigate(['/home']);
   }
 }

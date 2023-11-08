@@ -23,30 +23,89 @@ db.connect(err => {
   console.log('connected as id ' + db.threadId);
 });
 
-// QUERRIES
-let qryIndexReset = 'SET @count = 0; ' + 'UPDATE ?? SET ??.`id` = @count:= @count + 1; ' + 'ALTER TABLE ?? AUTO_INCREMENT = 1;';
-let qryOrderAsc = 'SELECT * FROM ?? ORDER BY ?? ASC';
-let qrySearchTable1Field = 'SELECT ?? FROM ?? WHERE ?? LIKE ?';
-let qrySearchTable2Fields = 'SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?';
-let qrySearchTable4Fields = 'SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?';
-let qrySearchTableById = 'SELECT * FROM ?? WHERE id = ?';
-let qrySearchTableAll = 'SELECT * FROM ??';
-let qryInsertTable = 'INSERT INTO ?? SET ?';
-let qryDeleteTable = 'DELETE FROM ?? WHERE id = ?';
-let qryUpdateTable = 'UPDATE ?? SET ? WHERE id = ?';
-let qrySortTable = 'SELECT ?? FROM ?? ORDER BY ?? ASC;';
 
-// GET ANY
+
+// FUNCTION QUERIES ###############################################################################################################
+function sortTableQuery(selectField, table, orderByField) {
+  return mysql.format('SELECT ?? FROM ?? ORDER BY ?? ASC;', [selectField, table, orderByField]);
+}
+
+function searchAllQuery(table) {
+  return mysql.format('SELECT * FROM ??;', [table]);
+}
+
+function orderAscQuery(table, orderByField) {
+  return mysql.format('SELECT * FROM ?? ORDER BY ?? ASC;', [table, orderByField]);
+}
+
+function searchByIdQuery(table, id) {
+  return mysql.format('SELECT * FROM ?? WHERE id = ?;', [table, id]);
+}
+
+function insertStaffQuery(table, data) {
+  return mysql.format('INSERT INTO ?? (id, name, services, weekday, time) VALUES (?, ?, ?, ?, ?);', [table, data.id, data.name, JSON.stringify(data.services), data.weekday, JSON.stringify(data.time)]);
+}
+
+function insertUserQuery(table, data) {
+  return mysql.format('INSERT INTO ?? (name, cpf, cep, dob, email, gender, phone, state, city, neighborhood, address, number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', [table, data.name, data.cpf, data.cep, data.dob, data.email, data.gender, data.phone, data.state, data.city, data.neighborhood, data.address, data.number]);
+}
+
+function insertGenericQuery(table, data) {
+  return mysql.format('INSERT INTO ?? SET ?;', [table, data]);
+}
+
+function searchOneFieldQuery(selectField, table, searchTerm) {
+  return mysql.format('SELECT ?? FROM ?? WHERE ?? LIKE ?;', [selectField, table, selectField, `%${searchTerm}%`]);
+}
+
+function searchFourFieldsQuery(selectField1, selectField2, selectField3, selectField4, table, searchTerm1, searchTerm2, searchTerm3, searchTerm4) {
+  return mysql.format('SELECT ??, ??, ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ? AND ?? LIKE ?;', [selectField1, selectField2, selectField3, selectField4, table, selectField1, `%${searchTerm1}%`, selectField2, `%${searchTerm2}%`, selectField3, `%${searchTerm3}%`, selectField4, `%${searchTerm4}%`]);
+}
+
+function searchTwoFieldsQuery(table, selectField1, selectField2, whereField1, whereField2, searchTerm1, searchTerm2) {
+  return mysql.format('SELECT ??, ?? FROM ?? WHERE ?? LIKE ? AND ?? LIKE ?;', [selectField1, selectField2, table, whereField1, `%${searchTerm1}%`, whereField2, `%${searchTerm2}%`]);
+}
+
+function deleteQuery(table, id) {
+  return mysql.format('DELETE FROM ?? WHERE id = ?;', [table, id]);
+}
+
+function updateQuery(table, data, id) {
+  return mysql.format('UPDATE ?? SET ? WHERE id = ?;', [table, data, id]);
+}
+
+function indexResetQuery(table) {
+  return `
+    SET @count = 0;
+    UPDATE \`${table}\` SET \`${table}\`.\`id\` = @count := @count + 1;
+    ALTER TABLE \`${table}\` AUTO_INCREMENT = 1;
+  `;
+}
+
+function getQueryById(id, table, data) {
+  if (id === 'staff') return insertStaffQuery(table, data);
+  if (id === 'user') return insertUserQuery(table, data);
+  else return insertGenericQuery(table, data);
+}
+
+function responseMsg(id) {
+  if (id === 'clients') return 'Cliente'
+  if (id === 'staff') return 'Colaborador'
+  if (id === 'users') return 'Usuário'
+}
+
+
+// GET ANY  ###############################################################################################################
 app.get('/:id', (req, res) => {
   const { table } = req.headers;
-  const field1 = 'name';
-  db.query(qrySortTable, [field1, table, field1])
+  const selectField = 'name';
+  db.query(sortTableQuery(selectField, table, selectField))
 
-  if (req.params.id === 'user' || req.params.id === 'agenda' || req.params.id === 'procedure' || req.params.id === 'hours') {
-    db.query(qrySearchTableAll, [table], (err, result) => {
-      if (err) res.status(400).send({ message: 'Dados não carregados!' });
+  if (req.params.id === 'staff' || req.params.id === 'agenda' || req.params.id === 'user' || req.params.id === 'procedure' || req.params.id === 'hours') {
+    db.query(searchAllQuery(table), (err, result) => {
+      if (err) res.status(400).send({ message: 'Dados não carregados!', data: err });
       else {
-          db.query(qryOrderAsc, [table, field1], (err, result) => {
+        db.query(orderAscQuery(table, selectField), (err, result) => {
           res.status(200).send({ message: 'Dados carregados!', data: result });
         });
       }
@@ -54,46 +113,41 @@ app.get('/:id', (req, res) => {
   }
 
   else {
-    db.query(qrySearchTableById, [req.params.id], (err, result) => {
-      if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não carregados!' });
-      else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' carregados!' });
+    db.query(searchByIdQuery(table, req.params.id), (err, result) => {
+      if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não carregados!', data: err });
+      else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' carregados!', data: result });
     })
   }
 })
 
-
-// DELETE ANY
+// DELETE ANY  ###############################################################################################################
 app.delete('/:id', (req, res) => {
   const { table } = req.headers;
-  let deleteDataQry = mysql.format(qryDeleteTable, [table, req.params.id]);
-  db.query(deleteDataQry, (err, result) => {
-    if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não deletados!' });
-    else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' deletados!' });
+  db.query(deleteQuery(table, req.params.id), (err, result) => {
+    if (err) res.status(400).send({ message: 'Dados do id:' + req.params.id + 'não deletados!', data: err });
+    else res.status(200).send({ message: 'Dados do id:' + req.params.id + ' deletados!', data: result });
   })
-  db.query(qryIndexReset, [table, table, table])
+  db.query(indexResetQuery(table))
 })
 
-// POST ANY
+
+// POST ANY  ###############################################################################################################
 app.post('/:id', (req, res) => {
   const { data, table } = req.body;
   const field1 = 'name';
   const setName = '%' + data.name + '%';
   const setEmail = '%' + data.email + '%';
   const setDate = '%' + data.date + '%';
-  const setProcedure = '%' + data.procedure + '%';
+  const setService = '%' + data.service + '%';
   const setHours = '%' + data.hours + '%';
-  let insertDataQry = mysql.format(qryInsertTable, [table, data]);
-  db.query(qryIndexReset, [table, table, table]);
-
+  const msg = responseMsg(req.params.id);
+  db.query(indexResetQuery(table));
   if (req.params.id === 'clients' || req.params.id === 'staff' || req.params.id === 'users') {
-    const field2 = 'email';
-    const msg = (req.params.id === 'clients' ? 'Cliente' : (req.params.id === 'staff' ? 'Colaborador' : 'Usuário'));
-    let searchDataQry = mysql.format(qrySearchTable2Fields, [field1, field2, table, field1, setName, field2, setEmail]);
-    db.query(searchDataQry, (err, result) => {
+    db.query(searchOneFieldQuery(field1, table, setName), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: msg + ' existente', data: result });
       else {
-        db.query(insertDataQry, (err, result) => {
-          if (err) res.status(404).send({ message: msg + ' não cadastrado!' });
+        db.query(getQueryById(req.params.id, table, data), (err, result) => {
+          if (err) res.status(404).send({ message: msg + ' não cadastrado!', data: err });
           else res.status(202).send({ message: msg + ' cadastrado!', data: result });
         })
       }
@@ -102,16 +156,13 @@ app.post('/:id', (req, res) => {
 
   if (req.params.id === 'agenda') {
     const field2 = 'date';
-    const field3 = 'procedure';
+    const field3 = 'service';
     const field4 = 'hours';
-
-    let searchDataQry = mysql.format(qrySearchTable4Fields, [field1, field2, field3, field4, table, field1, setName, field2, setDate, field3, setProcedure, field4, setHours]);
-
-    db.query(searchDataQry, (err, result) => {
+    db.query(searchFourFieldsQuery(field1, field2, field3, field4, table, setName, setDate, setService, setHours), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: 'Agendamento existente!', data: result });
       else {
-        db.query(insertDataQry, (err, result) => {
-          if (err) res.status(404).send({ message: 'Agendamento não cadastrado!' });
+        db.query(insertGenericQuery(table, data), (err, result) => {
+          if (err) res.status(404).send({ message: 'Agendamento não cadastrado!', data: err });
           else res.status(202).send({ message: 'Agendamento cadastrado!', data: result });
         })
       }
@@ -119,13 +170,11 @@ app.post('/:id', (req, res) => {
   }
 
   if (req.params.id === 'procedures') {
-    let searchDataQry = mysql.format(qrySearchTable1Field, [field1, table, field1, setName]);
-
-    db.query(searchDataQry, (err, result) => {
+    db.query(searchOneFieldQuery(field1, table, setName), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: 'Procedimento existente' })
       else {
-        db.query(insertDataQry, (err, result) => {
-          if (err) res.status(404).send({ message: 'Procedimento não cadastrado!' });
+        db.query(insertGenericQuery(table, data), (err, result) => {
+          if (err) res.status(404).send({ message: 'Procedimento não cadastrado!', data: err });
           else res.status(202).send({ message: 'Procedimento cadastrado!', data: result });
         })
       }
@@ -133,14 +182,12 @@ app.post('/:id', (req, res) => {
   }
 })
 
-// PUT ANY
+// PUT ANY  ###############################################################################################################
 app.put('/:id', (req, res) => {
   const { data, table } = req.body;
-  let updateDataQry = mysql.format(qryUpdateTable, [table, data, req.params.id]);
-
-  db.query(qryIndexReset, [table, table, table]);
-  db.query(updateDataQry, (err, result) => {
-    if (err) res.status(400).send({ message: 'Dados do id: ' + req.params.id + ' não atualizados!' });
-    else res.status(200).send({ message: 'Dados do id: ' + req.params.id + ' atualizados!' });
+  db.query(indexResetQuery(table));
+  db.query(updateQuery(table, data, req.params.id), (err, result) => {
+    if (err) res.status(400).send({ message: 'Dados do id: ' + req.params.id + ' não atualizados!', data: err });
+    else res.status(200).send({ message: 'Dados do id: ' + req.params.id + ' atualizados!', data: result });
   })
 })

@@ -81,7 +81,7 @@ export class AgendaComponent implements OnInit {
 
   loadData(): void {
     const table = { table: 'agenda' };
-    const route = 'procedure';
+    const route = 'agenda';
     this._appService.load(route, table).subscribe({
       next: (res) => {
         this.agenda = res.data;

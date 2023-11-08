@@ -6,13 +6,9 @@ import {
   ConfirmationService,
   MessageService,
 } from 'primeng/api';
+import { ServicesInterface } from "src/app/services/ServicesInterface";
 import { appService } from 'src/app/services/app.service';
 
-interface ServicesInterface {
-  name: string;
-  duration: number;
-  price: number;
-}
 
 @Component({
   selector: 'app-procedure-create',
@@ -35,34 +31,6 @@ export class ProcedureCreateComponent implements OnInit {
   ngOnInit() {
     this.setUpForm();
     this.load();
-
-    this.services = [
-      {
-        name: 'Massage Therapy',
-        duration: 60,
-        price: 50,
-      },
-      {
-        name: 'Physical Exercise Training',
-        duration: 45,
-        price: 60,
-      },
-      {
-        name: 'Electrotherapy',
-        duration: 30,
-        price: 40,
-      },
-      {
-        name: 'Joint Mobilization',
-        duration: 40,
-        price: 55,
-      },
-      {
-        name: 'Ultrasound Therapy',
-        duration: 20,
-        price: 35,
-      },
-    ];
   }
 
   setUpForm(): void {
@@ -161,8 +129,6 @@ if(this.buttonOptions == 0){
 
   delete(service: ServicesInterface): void {
     const table = { table: 'procedures' };
-    console.log(table, service);
-
     this._appService.delete(table, service).subscribe({
       next: (res) => {
         this.load();

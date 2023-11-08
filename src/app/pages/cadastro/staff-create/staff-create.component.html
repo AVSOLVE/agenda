@@ -1,12 +1,8 @@
 <section class="header">
   <p-toast></p-toast>
   <form [formGroup]="userForm" (ngSubmit)="save()">
-    <!-- header page -->
-    <div class="flex justify-content-between">
-    </div>
-    <!-- content page -->
     <section class="content pt-5 grid">
-      <div class="p-card col-6 justify-content-center">
+      <div class="p-card col-12 justify-content-center">
         <h1 class="text-center">Novo Colaborador</h1>
         <div class="field p-float-label mt-7">
           <input
@@ -22,21 +18,32 @@
         <div class="field p-float-label">
           <p-multiSelect
             styleClass="w-full"
-            formControlName="procedures"
+            formControlName="services"
             [resetFilterOnHide]="true"
-            [options]="procedures"
+            [options]="services"
             optionLabel="name"
             placeholder="Serviços"
           ></p-multiSelect>
           <label>Serviços</label>
         </div>
         <div class="field p-float-label">
+          <p-dropdown
+            styleClass="w-full"
+            formControlName="weekday"
+            [resetFilterOnHide]="true"
+            [options]="weekdays"
+            optionLabel="label"
+            placeholder="Dia"
+          ></p-dropdown>
+          <label>Dia</label>
+        </div>
+        <div class="field p-float-label">
           <p-multiSelect
             styleClass="w-full"
-            formControlName="procedures"
+            formControlName="time"
             [resetFilterOnHide]="true"
-            [options]="procedures"
-            optionLabel="name"
+            [options]="hours"
+            optionLabel="label"
             placeholder="Horários"
           ></p-multiSelect>
           <label>Horários</label>
@@ -60,9 +67,13 @@
           ></button>
         </div>
       </div>
-
-      <div class="p-card col-6">
-        TABELA DE DIAS E HORARIOS
+      <div class="grid col-12 justify-content-center">
+        <div class="p-card contact-card m-1 bg-black-alpha-40 w-full" *ngFor="let eachStaff of staff">
+          <h3>{{ eachStaff.name }}</h3>
+          <div>{{ eachStaff.services }}</div>
+          <div>{{ getWeekdayLabel(eachStaff.weekday) }}</div>
+          <div>{{ eachStaff.time }}</div>
+        </div>
       </div>
     </section>
   </form>
