@@ -7,7 +7,6 @@ import { appService } from "src/app/services/app.service";
 @Component({
   selector: 'app-editar',
   templateUrl: './editar.component.html',
-  styleUrls: ['./editar.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class EditarComponent {

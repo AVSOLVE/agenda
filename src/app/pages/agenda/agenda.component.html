@@ -88,7 +88,7 @@
 
             <td style="min-width: 10rem">
               <span class="p-column-title">Procedimento</span>
-              {{ booking.procedure }}
+              {{ booking.service }}
             </td>
 
             <td style="min-width: 10rem">
@@ -99,25 +99,6 @@
             <td style="min-width: 10rem">
               <span class="p-column-title">Horário</span>
               {{ booking.hours }}
-            </td>
-
-            <td>
-              <div class="flex">
-                <button
-                  pButton
-                  pRipple
-                  icon="pi pi-pencil"
-                  class="p-button-rounded p-button-success mr-2 gap-2"
-                  (click)="editBooking(booking)"
-                >EDITAR</button>
-                <button
-                  pButton
-                  pRipple
-                  icon="pi pi-trash"
-                  class="p-button-rounded p-button-warning gap-2"
-                  (click)="delete()"
-                >DELETAR</button>
-              </div>
             </td>
           </tr>
         </ng-template>

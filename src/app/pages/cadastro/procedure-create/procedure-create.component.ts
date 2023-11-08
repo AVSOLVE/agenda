@@ -13,7 +13,6 @@ import { appService } from 'src/app/services/app.service';
 @Component({
   selector: 'app-procedure-create',
   templateUrl: './procedure-create.component.html',
-  styleUrls: ['./procedure-create.component.css'],
 })
 export class ProcedureCreateComponent implements OnInit {
   serviceForm: FormGroup = new FormGroup({});

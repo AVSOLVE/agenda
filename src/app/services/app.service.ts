@@ -53,7 +53,7 @@ export class appService {
   }
 
   delete(table: any = {}, data: any = {}): Observable<ClienteInterface> {
-    const path = this.url + `/${data.id}`;
+    const path = this.url + `/${data}`;
     return this._http.delete<ClienteInterface>(path, { headers: table });
   }
 }

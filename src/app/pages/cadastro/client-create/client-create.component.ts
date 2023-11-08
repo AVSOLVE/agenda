@@ -12,7 +12,6 @@ interface States {
 @Component({
   selector: 'app-client-create',
   templateUrl: './client-create.component.html',
-  styleUrls: ['./client-create.component.css'],
 })
 export class ClientCreateComponent implements OnInit {
   genders: any[] = [
@@ -154,11 +153,10 @@ export class ClientCreateComponent implements OnInit {
   save(): void {
     const data = this.userForm.value;
     const table = 'users';
-    console.log(data);
-
     this._appService.save(table, data).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
+        this.userForm.reset();
         this._router.navigate(['/cadastrar']);
       },
       error: (err) => {
@@ -168,6 +166,7 @@ export class ClientCreateComponent implements OnInit {
   }
 
   cancel() {
+    this.userForm.reset();
     this._router.navigate(['/home']);
   }
 }

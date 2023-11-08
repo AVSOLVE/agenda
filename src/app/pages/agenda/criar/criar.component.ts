@@ -15,7 +15,6 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-criar',
   templateUrl: './criar.component.html',
-  styleUrls: ['./criar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class CriarComponent implements OnInit {

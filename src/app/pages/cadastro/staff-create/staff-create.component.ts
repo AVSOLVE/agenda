@@ -17,7 +17,6 @@ interface StaffInterface {
 @Component({
   selector: 'app-staff-create',
   templateUrl: './staff-create.component.html',
-  styleUrls: ['./staff-create.component.css'],
 })
 export class StaffCreateComponent implements OnInit {
   genders!: NameValueInterface[];

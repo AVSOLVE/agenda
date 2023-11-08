@@ -41,7 +41,7 @@
             <label>Nome do Cliente</label>
           </div>
 
-          <div class="field p-float-label col-6 flex">
+          <div class="field p-float-label col-6 flex gap-3">
             <p-dropdown
               styleClass="w-full"
               formControlName="service"
@@ -52,8 +52,8 @@
               placeholder="Procedimento"
             ></p-dropdown>
             <label>Procedimento</label>
-            <div class="col-3 flex align-content-center">
-              <div *ngIf="this.userForm.get('services')"> Valor: R$ {{this.userForm.get('services')?.value?.price}}</div>
+            <div class="col-4 text-center">
+              <div class="align-self-center" *ngIf="this.userForm.get('service')?.dirty"> R$ {{this.userForm.get('service')?.value?.price}},00</div>
             </div> </div>
 
           <div class="field p-float-label col-6">
