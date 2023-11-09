@@ -5,63 +5,71 @@ import { Router } from '@angular/router';
 import { appService } from 'src/app/services/app.service';
 import { MessageService } from 'primeng/api';
 import { ServicesInterface } from 'src/app/services/ServicesInterface';
-
-interface StaffInterface {
-  id: number;
-  name: string;
-  services: string;
-  weekday: number;
-  time: number[];
-}
+import { StaffInterface } from 'src/app/services/StaffInterface';
 
 @Component({
   selector: 'app-staff-create',
   templateUrl: './staff-create.component.html',
 })
 export class StaffCreateComponent implements OnInit {
-  genders!: NameValueInterface[];
-  services!: ServicesInterface[];
-  staff!: StaffInterface[];
+  genders: NameValueInterface[] = [];
+  services: ServicesInterface[] = [];
+  staff: StaffInterface[] = [];
   userForm: FormGroup = new FormGroup({});
-  aux: any[] = [];
-  customers = [
+  staf: StaffInterface[] = [
     {
-      id: 1000,
-      name: 'James Butt',
-      services: "Fisioterapia",
-      weekday: 2,
-      time: 8,
+      id: 1,
+      name: 'Alexandre Lima Valdivino',
+      services:
+        '["Drenagem Linfática","AureoloTerapia","Fisioterapia","Gestantes"]',
+      weekday: '2',
+      time: '12',
     },
     {
-      id: 1001,
-      name: 'Sarah Johnson',
-      services: "Massage Therapy",
-      weekday: 4,
-      time: 5,
+      id: 7,
+      name: 'Bruno',
+      services:
+        '[{"id":3,"name":"Gestantes","duration":"60","price":"90"},{"id":1,"name":"Fisioterapia","duration":"50","price":"80"}]',
+      weekday: '6',
+      time: '12',
     },
     {
-      id: 1002,
-      name: 'John Smith',
-      services: "Chiropractic Care",
-      weekday: 1,
-      time: 8,
+      id: 2,
+      name: 'Dayanne Lima Valdivino',
+      services: '["Gestantes","AureoloTerapia"]',
+      weekday: '3',
+      time: '8',
     },
     {
-      id: 1003,
-      name: 'Emily Davis',
-      services: "Acupuncture",
-      weekday: 3,
-      time: 9,
+      id: 4,
+      name: 'juliana',
+      services: '["Pediatria","Massoterapia","Limpeza de Pele"]',
+      weekday: '5',
+      time: '9',
     },
     {
-      id: 1004,
-      name: 'Michael Wilson',
-      services: "Physical Therapy",
-      weekday: 5,
-      time: 9,
-    }
+      id: 5,
+      name: 'Leozera',
+      services: '["Gestantes","Limpeza de Pele"]',
+      weekday: '4',
+      time: '9',
+    },
+    {
+      id: 3,
+      name: 'lucia',
+      services: '["Pediatria","Limpeza de Pele","Gestantes"]',
+      weekday: '5',
+      time: '8',
+    },
+    {
+      id: 6,
+      name: 'Teste',
+      services:
+        '["Fisioterapia","Gestantes","Limpeza de Pele","Drenagem Linfática"]',
+      weekday: '2',
+      time: '12',
+    },
   ];
-
 
   weekdays = [
     { label: 'Domingo', value: 1 },
@@ -100,15 +108,31 @@ export class StaffCreateComponent implements OnInit {
     this.loadServices();
     this.loadStaff();
     this.setUpForm();
+    console.log("by hour: ", this.getStaffByHour(12, this.staf));
+    console.log("by day: ", this.getStaffByDay(2, this.staf));
+    console.log("by day and then hour: ", this.getStaffByDayHour(2, 12, this.staff));
+  }
+
+
+  getStaffByDayHour(day: number, hour: number, data: StaffInterface[]): StaffInterface[] {
+    return data.filter(customer => parseInt(customer.time) === hour && parseInt(customer.weekday) === day);
+  }
+
+  getStaffByHour(hour: number, data: StaffInterface[]): StaffInterface[] {
+    return data.filter(customer => parseInt(customer.time) === hour);
+  }
+
+  getStaffByDay(day: number, data: StaffInterface[]): StaffInterface[] {
+    return data.filter(customer => parseInt(customer.weekday) === day);
   }
 
   setUpForm(): void {
     this.userForm = this._fb.group({
       id: null,
       name: null,
-      services: [null],
+      services: null,
       weekday: null,
-      time: [null],
+      time: null,
     });
   }
 
@@ -117,16 +141,12 @@ export class StaffCreateComponent implements OnInit {
   }
 
   getLabelsFromValues(valueArray: number[]): string[] {
-    const labels: string[] = [];
-
-    valueArray.forEach((value) => {
-      const hour = this.hours.find((item) => item.value === value);
-      if (hour) {
-        labels.push(hour.label);
-      }
-    });
-    return labels;
+    return valueArray.map(value =>
+      this.hours.find(item => item.value === value)?.label || ''
+    );
   }
+
+
 
   getWeekdayLabel(weekday: number): string {
     const weekdays = [
@@ -174,18 +194,8 @@ export class StaffCreateComponent implements OnInit {
   }
 
   save(): void {
-    const data = this.userForm.value;
-    data.services = this.userForm
-      .get('services')
-      ?.value.map((service: { name: any }) => service.name);
-    data.weekday = this.userForm.get('weekday')?.value.value;
-    data.time = this.userForm
-      .get('time')
-      ?.getRawValue()
-      .map((service: { value: any }) => service.value);
-
     const table = 'staff';
-    this._appService.save(table, data).subscribe({
+    this._appService.save(table, this.userForm.value).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
         this.ngOnInit();

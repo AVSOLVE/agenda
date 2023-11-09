@@ -146,7 +146,7 @@ app.post('/:id', (req, res) => {
     db.query(searchOneFieldQuery(field1, table, setName), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: msg + ' existente', data: result });
       else {
-        db.query(getQueryById(req.params.id, table, data), (err, result) => {
+        db.query(insertStaffQuery(table, data), (err, result) => {
           if (err) res.status(404).send({ message: msg + ' não cadastrado!', data: err });
           else res.status(202).send({ message: msg + ' cadastrado!', data: result });
         })
