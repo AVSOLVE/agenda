@@ -82,19 +82,19 @@ export class StaffCreateComponent implements OnInit {
   ];
 
   hours = [
-    { label: '7am', value: 7 },
-    { label: '8am', value: 8 },
-    { label: '9am', value: 9 },
-    { label: '10am', value: 10 },
-    { label: '11am', value: 11 },
-    { label: '12pm', value: 12 },
-    { label: '1pm', value: 13 },
-    { label: '2pm', value: 14 },
-    { label: '3pm', value: 15 },
-    { label: '4pm', value: 16 },
-    { label: '5pm', value: 17 },
-    { label: '6pm', value: 18 },
-    { label: '7pm', value: 19 },
+    { label: '07:00', value: 7 },
+    { label: '08:00', value: 8 },
+    { label: '09:00', value: 9 },
+    { label: '10:00', value: 10 },
+    { label: '11:00', value: 11 },
+    { label: '12:00', value: 12 },
+    { label: '13:00', value: 13 },
+    { label: '14:00', value: 14 },
+    { label: '15:00', value: 15 },
+    { label: '16:00', value: 16 },
+    { label: '17:00', value: 17 },
+    { label: '18:00', value: 18 },
+    { label: '19:00', value: 19 },
   ];
 
   constructor(
@@ -108,22 +108,25 @@ export class StaffCreateComponent implements OnInit {
     this.loadServices();
     this.loadStaff();
     this.setUpForm();
-    console.log("by hour: ", this.getStaffByHour(12, this.staf));
-    console.log("by day: ", this.getStaffByDay(2, this.staf));
-    console.log("by day and then hour: ", this.getStaffByDayHour(2, 12, this.staff));
   }
 
-
-  getStaffByDayHour(day: number, hour: number, data: StaffInterface[]): StaffInterface[] {
-    return data.filter(customer => parseInt(customer.time) === hour && parseInt(customer.weekday) === day);
+  getStaffByDayHour(
+    day: number,
+    hour: number,
+    data: StaffInterface[]
+  ): StaffInterface[] {
+    return data.filter(
+      (customer) =>
+        parseInt(customer.time) === hour && parseInt(customer.weekday) === day
+    );
   }
 
   getStaffByHour(hour: number, data: StaffInterface[]): StaffInterface[] {
-    return data.filter(customer => parseInt(customer.time) === hour);
+    return data.filter((customer) => parseInt(customer.time) === hour);
   }
 
   getStaffByDay(day: number, data: StaffInterface[]): StaffInterface[] {
-    return data.filter(customer => parseInt(customer.weekday) === day);
+    return data.filter((customer) => parseInt(customer.weekday) === day);
   }
 
   setUpForm(): void {
@@ -141,12 +144,10 @@ export class StaffCreateComponent implements OnInit {
   }
 
   getLabelsFromValues(valueArray: number[]): string[] {
-    return valueArray.map(value =>
-      this.hours.find(item => item.value === value)?.label || ''
+    return valueArray.map(
+      (value) => this.hours.find((item) => item.value === value)?.label || ''
     );
   }
-
-
 
   getWeekdayLabel(weekday: number): string {
     const weekdays = [

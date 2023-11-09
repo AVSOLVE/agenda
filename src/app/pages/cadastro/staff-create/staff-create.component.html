@@ -69,36 +69,21 @@
       </div>
 
       <div class="card">
-        <p-table
-          [value]="staff"
-          rowGroupMode="rowspan"
-          groupRowsBy="time"
-          sortField="staff.time"
-          sortMode="single"
-          [tableStyle]="{ 'min-width': '75rem' }"
-        >
+        <p-table [value]="hours" [tableStyle]="{ 'min-width': '50rem' }">
           <ng-template pTemplate="header">
             <tr>
-              <th style="width: 3rem">#</th>
-              <th>Horário</th>
+              <th>Horarário</th>
               <th>Colaborador</th>
             </tr>
           </ng-template>
-          <ng-template
-            pTemplate="body"
-            let-staff
-            let-rowIndex="rowIndex"
-            let-rowgroup="rowgroup"
-            let-rowspan="rowspan"
-          >
-            <tr>
-              <td>{{ rowIndex }}</td>
-              <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
-                <span class="font-bold ml-2">{{ staff.time }}</span>
-              </td>
+          <ng-template pTemplate="body" let-rowIndex="rowIndex" let-staffByHour>
+            <tr> {{ hours[rowIndex].label }}
               <td>
-                {{ staff.name }}
-              </td>
+                <ul>
+                  <li *ngFor="let each of getStaffByHour(hours[rowIndex].value, this.staff)">
+                    {{ each.name }} : {{ each.services }}
+                  </li>
+                </ul></td>
             </tr>
           </ng-template>
         </p-table>
