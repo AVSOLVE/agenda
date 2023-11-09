@@ -67,13 +67,41 @@
           ></button>
         </div>
       </div>
-      <div class="grid col-12 justify-content-center">
-        <div class="p-card contact-card m-1 bg-black-alpha-40 w-full" *ngFor="let eachStaff of staff">
-          <h3>{{ eachStaff.name }}</h3>
-          <div>{{ eachStaff.services }}</div>
-          <div>{{ getWeekdayLabel(eachStaff.weekday) }}</div>
-          <div>{{ eachStaff.time }}</div>
-        </div>
+
+      <div class="card">
+        <p-table
+          [value]="customers"
+          rowGroupMode="rowspan"
+          groupRowsBy="time"
+          sortField="staff.time"
+          sortMode="single"
+          [tableStyle]="{ 'min-width': '75rem' }"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width: 3rem">#</th>
+              <th>Horário</th>
+              <th>Colaborador</th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-staff
+            let-rowIndex="rowIndex"
+            let-rowgroup="rowgroup"
+            let-rowspan="rowspan"
+          >
+            <tr>
+              <td>{{ rowIndex }}</td>
+              <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
+                <span class="font-bold ml-2">{{ staff.time }}</span>
+              </td>
+              <td>
+                {{ staff.name }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </section>
   </form>

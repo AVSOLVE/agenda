@@ -4,11 +4,11 @@
     class="col-12 mt-4"
     [collapsed]="false">
     <p-tabView (onChange)="selectTypeUser($event)" >
-      <p-tabPanel header="Cliente">
+      <!-- <p-tabPanel header="Cliente">
         <app-client-create>
           *ngIf="event.index === 0"
         </app-client-create>
-      </p-tabPanel>
+      </p-tabPanel> -->
       <p-tabPanel header="Colaborador">
         <app-staff-create>
           *ngIf="event.index === 1"

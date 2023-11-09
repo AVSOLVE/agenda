@@ -24,6 +24,45 @@ export class StaffCreateComponent implements OnInit {
   staff!: StaffInterface[];
   userForm: FormGroup = new FormGroup({});
   aux: any[] = [];
+  customers = [
+    {
+      id: 1000,
+      name: 'James Butt',
+      services: "Fisioterapia",
+      weekday: 2,
+      time: 8,
+    },
+    {
+      id: 1001,
+      name: 'Sarah Johnson',
+      services: "Massage Therapy",
+      weekday: 4,
+      time: 5,
+    },
+    {
+      id: 1002,
+      name: 'John Smith',
+      services: "Chiropractic Care",
+      weekday: 1,
+      time: 8,
+    },
+    {
+      id: 1003,
+      name: 'Emily Davis',
+      services: "Acupuncture",
+      weekday: 3,
+      time: 9,
+    },
+    {
+      id: 1004,
+      name: 'Michael Wilson',
+      services: "Physical Therapy",
+      weekday: 5,
+      time: 9,
+    }
+  ];
+
+
   weekdays = [
     { label: 'Domingo', value: 1 },
     { label: 'Segunda-feira', value: 2 },
@@ -33,6 +72,7 @@ export class StaffCreateComponent implements OnInit {
     { label: 'Sexta-feira', value: 6 },
     { label: 'Sábado', value: 7 },
   ];
+
   hours = [
     { label: '7am', value: 7 },
     { label: '8am', value: 8 },
@@ -77,22 +117,27 @@ export class StaffCreateComponent implements OnInit {
   }
 
   getLabelsFromValues(valueArray: number[]): string[] {
-
     const labels: string[] = [];
 
-    valueArray.forEach(value => {
-      const hour = this.hours.find(item => item.value === value);
+    valueArray.forEach((value) => {
+      const hour = this.hours.find((item) => item.value === value);
       if (hour) {
         labels.push(hour.label);
       }
     });
-
-    console.log(valueArray, labels);
     return labels;
   }
 
   getWeekdayLabel(weekday: number): string {
-    const weekdays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const weekdays = [
+      'Domingo',
+      'Segunda-feira',
+      'Terça-feira',
+      'Quarta-feira',
+      'Quinta-feira',
+      'Sexta-feira',
+      'Sábado',
+    ];
     return weekdays[weekday];
   }
 
@@ -102,7 +147,11 @@ export class StaffCreateComponent implements OnInit {
     this._appService.load(route, table).subscribe({
       next: (res) => {
         this.staff = res.data;
-        this.showToast('success', 'Colaboradores carregados com successo!', res.message);
+        this.showToast(
+          'success',
+          'Colaboradores carregados com successo!',
+          res.message
+        );
       },
       error: (err) => {
         this.showToast('error', 'Erro!', err.error.message);
