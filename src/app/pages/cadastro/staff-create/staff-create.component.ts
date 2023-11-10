@@ -16,60 +16,6 @@ export class StaffCreateComponent implements OnInit {
   services: ServicesInterface[] = [];
   staff: StaffInterface[] = [];
   userForm: FormGroup = new FormGroup({});
-  staf: StaffInterface[] = [
-    {
-      id: 1,
-      name: 'Alexandre Lima Valdivino',
-      services:
-        '["Drenagem Linfática","AureoloTerapia","Fisioterapia","Gestantes"]',
-      weekday: '2',
-      time: '12',
-    },
-    {
-      id: 7,
-      name: 'Bruno',
-      services:
-        '[{"id":3,"name":"Gestantes","duration":"60","price":"90"},{"id":1,"name":"Fisioterapia","duration":"50","price":"80"}]',
-      weekday: '6',
-      time: '12',
-    },
-    {
-      id: 2,
-      name: 'Dayanne Lima Valdivino',
-      services: '["Gestantes","AureoloTerapia"]',
-      weekday: '3',
-      time: '8',
-    },
-    {
-      id: 4,
-      name: 'juliana',
-      services: '["Pediatria","Massoterapia","Limpeza de Pele"]',
-      weekday: '5',
-      time: '9',
-    },
-    {
-      id: 5,
-      name: 'Leozera',
-      services: '["Gestantes","Limpeza de Pele"]',
-      weekday: '4',
-      time: '9',
-    },
-    {
-      id: 3,
-      name: 'lucia',
-      services: '["Pediatria","Limpeza de Pele","Gestantes"]',
-      weekday: '5',
-      time: '8',
-    },
-    {
-      id: 6,
-      name: 'Teste',
-      services:
-        '["Fisioterapia","Gestantes","Limpeza de Pele","Drenagem Linfática"]',
-      weekday: '2',
-      time: '12',
-    },
-  ];
 
   weekdays = [
     { label: 'Domingo', value: 1 },
@@ -108,6 +54,39 @@ export class StaffCreateComponent implements OnInit {
     this.loadServices();
     this.loadStaff();
     this.setUpForm();
+    const jsonArrayString: string =
+      '[{"label":"08:00","value":8},{"label":"11:00","value":11},{"label":"12:00","value":12},{"label":"13:00","value":13},{"label":"14:00","value":14}]';
+    const parsedObjects: NameValueInterface[] =
+      this.parseJsonArray(jsonArrayString);
+    console.log(parsedObjects);
+  }
+
+  parseJsonArray(jsonString: string): NameValueInterface[] {
+    try {
+      const parsedArray: NameValueInterface[] = JSON.parse(jsonString);
+      if (Array.isArray(parsedArray)) {
+        return parsedArray;
+      } else {
+        throw new Error('Invalid JSON data. Expected an array.');
+      }
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      return [];
+    }
+  }
+
+  parseServicesObject(jsonString: string): ServicesInterface[] {
+    try {
+      const parsedArray: ServicesInterface[] = JSON.parse(jsonString);
+      if (Array.isArray(parsedArray)) {
+        return parsedArray;
+      } else {
+        throw new Error('Invalid JSON data. Expected an array.');
+      }
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+      return [];
+    }
   }
 
   getStaffByDayHour(
@@ -196,6 +175,8 @@ export class StaffCreateComponent implements OnInit {
 
   save(): void {
     const table = 'staff';
+    console.log(this.userForm.value);
+
     this._appService.save(table, this.userForm.value).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);

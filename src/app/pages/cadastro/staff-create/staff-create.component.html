@@ -69,7 +69,31 @@
       </div>
 
       <div class="card">
-        <p-table [value]="hours" [tableStyle]="{ 'min-width': '50rem' }">
+        <div *ngFor="let each of staff">
+          <br>
+          <br>
+          -----NOME-----
+          <br>
+          <br>
+          <div>{{ each.name }}</div>
+          <br>
+          <br>
+          -----SERVIÇOS-----
+          <br>
+          <br>
+          <div *ngFor="let each of parseServicesObject(each.services)">
+            <div>{{ each.name }}</div>
+          </div>
+          <br>
+          <br>
+          -----HORÁRIOS-----
+          <br>
+          <br>
+          <div  *ngFor="let each of parseJsonArray(each.time)">
+            <div>{{ each.label }}</div>
+          </div>
+        </div>
+        <!-- <p-table [value]="hours" [tableStyle]="{ 'min-width': '50rem' }">
           <ng-template pTemplate="header">
             <tr>
               <th>Horarário</th>
@@ -81,12 +105,12 @@
               <td>
                 <ul>
                   <li *ngFor="let each of getStaffByHour(hours[rowIndex].value, this.staff)">
-                    {{ each.name }} : {{ each.services }}
+                    {{ each | json }} : {{ each.services }}
                   </li>
                 </ul></td>
             </tr>
           </ng-template>
-        </p-table>
+        </p-table> -->
       </div>
     </section>
   </form>

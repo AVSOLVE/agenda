@@ -131,6 +131,9 @@ app.delete('/:id', (req, res) => {
 })
 
 
+
+
+
 // POST ANY  ###############################################################################################################
 app.post('/:id', (req, res) => {
   const { data, table } = req.body;
@@ -140,13 +143,31 @@ app.post('/:id', (req, res) => {
   const setDate = '%' + data.date + '%';
   const setService = '%' + data.service + '%';
   const setHours = '%' + data.hours + '%';
+
+
+  function generateInsertStaffQuery(data, table) {
+    const name = data.name;
+    const services = JSON.stringify(data.services);
+    const weekday = JSON.stringify(data.weekday);
+    const time = JSON.stringify(data.time);
+
+    const query =
+      `INSERT INTO ${table} (name, services, weekday, time) VALUES (
+      '${name}',
+      '${services}',
+      '${weekday}',
+      '${time}')`;
+
+    return query;
+  }
+
   const msg = responseMsg(req.params.id);
   db.query(indexResetQuery(table));
   if (req.params.id === 'clients' || req.params.id === 'staff' || req.params.id === 'users') {
     db.query(searchOneFieldQuery(field1, table, setName), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: msg + ' existente', data: result });
       else {
-        db.query(insertStaffQuery(table, data), (err, result) => {
+        db.query(generateInsertStaffQuery(data, table), (err, result) => {
           if (err) res.status(404).send({ message: msg + ' não cadastrado!', data: err });
           else res.status(202).send({ message: msg + ' cadastrado!', data: result });
         })

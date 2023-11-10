@@ -43,9 +43,9 @@ export class UserCreateComponent implements OnInit {
 
   setGenders():void{
     this.genders = [
-      { name: 'Feminino', value: 'F' },
-      { name: 'Masculino', value: 'M' },
-      { name: 'Outro', value: 'O' },
+      { label: 'Feminino', value: 'F' },
+      { label: 'Masculino', value: 'M' },
+      { label: 'Outro', value: 'O' },
     ];
   }
 

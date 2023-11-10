@@ -1,4 +1,4 @@
 export interface NameValueInterface {
-  name: string;
+  label: string;
   value: string;
 }
