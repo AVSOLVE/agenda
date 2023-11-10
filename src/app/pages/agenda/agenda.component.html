@@ -177,3 +177,20 @@
     </p-dialog>
   </div>
 </div>
+<p-table [value]="rows">
+  <ng-template pTemplate="header">
+     <tr>
+        <th *ngFor="let header of headers">{{ header }}</th>
+     </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-row>
+     <tr>
+        <td>{{ row.hour }}</td>
+        <td *ngFor="let person of people">
+           <ng-container *ngFor="let task of row.tasks">
+              <ng-container *ngIf="task.personName === person.name">{{ task.taskName }}</ng-container>
+           </ng-container>
+        </td>
+     </tr>
+  </ng-template>
+ </p-table>

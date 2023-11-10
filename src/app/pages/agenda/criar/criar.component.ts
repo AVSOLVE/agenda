@@ -47,9 +47,10 @@ export class CriarComponent implements OnInit {
     this.userForm = this._fb.group({
       id: null,
       name: null,
-      service: null,
       date: null,
-      hours: null,
+      startTime: null,
+      endTime: null,
+      service: null,
     });
   }
 
@@ -58,9 +59,10 @@ export class CriarComponent implements OnInit {
   }
 
   save(): void {
-    const data = this.prepareData();
     const table = 'agenda';
-    this._appService.save(table, data).subscribe({
+    console.log(table, this.userForm.value);
+
+    this._appService.save(table, this.userForm.value).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
         this.ngOnInit();
@@ -71,24 +73,8 @@ export class CriarComponent implements OnInit {
     });
   }
 
-
-  prepareData() {
-    const date = formatDate(
-      this.userForm.value.date,
-      'dd/MM/yyyy',
-      this.locale
-    );
-    const data = {
-      name: this.userForm.value.name.name,
-      service: this.userForm.value.service.name,
-      date: date,
-      hours: this.userForm.value.hours.name,
-    };
-    return data;
-  }
-
   loadUsers(): void {
-    const table = { table: 'users' };
+    const table = { table: 'users', searchfield: 'name' };
     const route = 'user';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -98,7 +84,7 @@ export class CriarComponent implements OnInit {
   }
 
   loadProcedures(): void {
-    const table = { table: 'procedures' };
+    const table = { table: 'procedures', searchfield: 'name' };
     const route = 'procedure';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -108,7 +94,7 @@ export class CriarComponent implements OnInit {
   }
 
   loadHours(): void {
-    const table = { table: 'hours' };
+    const table = { table: 'hours', searchfield: 'label' };
     const route = 'hours';
     this._appService.load(route, table).subscribe({
       next: (res) => {

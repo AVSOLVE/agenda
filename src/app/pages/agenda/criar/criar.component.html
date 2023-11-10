@@ -53,8 +53,14 @@
             ></p-dropdown>
             <label>Procedimento</label>
             <div class="col-4 text-center">
-              <div class="align-self-center" *ngIf="this.userForm.get('service')?.dirty"> R$ {{this.userForm.get('service')?.value?.price}},00</div>
-            </div> </div>
+              <div
+                class="align-self-center"
+                *ngIf="this.userForm.get('service')?.dirty"
+              >
+                R$ {{ this.userForm.get("service")?.value?.price }},00
+              </div>
+            </div>
+          </div>
 
           <div class="field p-float-label col-6">
             <p-calendar
@@ -70,9 +76,16 @@
           <div class="field p-float-label col-6">
             <p-dropdown
               styleClass="w-full"
-              formControlName="hours"
+              formControlName="startTime"
               [options]="hours"
-              optionLabel="name"
+              optionLabel="label"
+              placeholder="Horário"
+            ></p-dropdown>
+            <p-dropdown
+              styleClass="w-full"
+              formControlName="endTime"
+              [options]="hours"
+              optionLabel="label"
               placeholder="Horário"
             ></p-dropdown>
             <label>Horário</label>

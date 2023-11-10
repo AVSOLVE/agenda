@@ -9,6 +9,18 @@ import {
 import { AgendaInterface, appService } from 'src/app/services/app.service';
 import { Component, OnInit } from '@angular/core';
 
+interface Person {
+  name: string;
+  tasks: Task[];
+}
+
+interface Task {
+  taskName: string;
+  personName: string;
+  startTime: number;
+  endTime: number;
+}
+
 interface Column {
   field: string;
   header: string;
@@ -21,8 +33,8 @@ interface Column {
 export class AgendaComponent implements OnInit {
   selectedUser!: any;
   agenda: AgendaInterface[] = [];
-  cols!: Column[];
   rowData: any;
+  cols!: Column[];
   toggleEditOnSelection: any;
   toggleDeleteOnSelection: any;
   bookingDialog: boolean = false;
@@ -41,24 +53,70 @@ export class AgendaComponent implements OnInit {
   month: any;
   year: any;
 
+  people: Person[] = [
+    {
+      name: 'John',
+      tasks: [
+        { startTime: 7, endTime: 9, taskName: 'Task 1', personName: 'John' },
+        { startTime: 10, endTime: 12, taskName: 'Task 4', personName: 'John' },
+        { startTime: 11, endTime: 15, taskName: 'Task 2', personName: 'John' },
+      ],
+    },
+    {
+      name: 'Jane',
+      tasks: [
+        { startTime: 13, endTime: 17, taskName: 'Task 2', personName: 'Jane' },
+      ],
+    },
+  ];
+
+  headers = ['Time'];
+
+  rows: any = [
+    { hour: 7, tasks: [] },
+    { hour: 8, tasks: [] },
+    { hour: 9, tasks: [] },
+    { hour: 10, tasks: [] },
+    { hour: 11, tasks: [] },
+    { hour: 12, tasks: [] },
+    { hour: 13, tasks: [] },
+    { hour: 14, tasks: [] },
+    { hour: 15, tasks: [] },
+    { hour: 16, tasks: [] },
+    { hour: 18, tasks: [] },
+    { hour: 19, tasks: [] },
+  ];
+
   constructor(
     private _router: Router,
     private _appService: appService,
-    private _messageService: MessageService // private modal: NgbModal
+    private _messageService: MessageService
   ) {}
 
   ngOnInit() {
     this.loadData();
-    this.loadClients();
+    this.loadUsers();
     this.loadProcedures();
     this.loadHours();
-
     this.cols = [
       { field: 'name', header: 'Nome' },
       { field: 'procedure', header: 'Procedimento' },
       { field: 'date', header: 'Data' },
       { field: 'hours', header: 'Horario' },
     ];
+    this.headers = ['Time'].concat(this.people.map((person) => person.name));
+
+    this.updateRowsWithPersonTasks(this.people);
+  }
+
+  updateRowsWithPersonTasks(newPerson: Person[]): void {
+    newPerson.forEach((person) => {
+      person.tasks.forEach((task) => {
+        for (let i = task.startTime; i < task.endTime; i++) {
+          this.rows[i - 7].tasks.push({...task});
+        }
+      });
+    });
   }
 
   getWeekDay(dayIndex: number) {
@@ -79,7 +137,7 @@ export class AgendaComponent implements OnInit {
   }
 
   loadData(): void {
-    const table = { table: 'agenda' };
+    const table = { table: 'agenda', searchfield: 'name' };
     const route = 'agenda';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -89,7 +147,7 @@ export class AgendaComponent implements OnInit {
   }
 
   loadProcedures(): void {
-    const table = { table: 'procedures' };
+    const table = { table: 'procedures', searchfield: 'name' };
     const route = 'procedure';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -98,8 +156,8 @@ export class AgendaComponent implements OnInit {
     });
   }
 
-  loadClients(): void {
-    const table = { table: 'users' };
+  loadUsers(): void {
+    const table = { table: 'users', searchfield: 'name' };
     const route = 'user';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -109,7 +167,7 @@ export class AgendaComponent implements OnInit {
   }
 
   loadHours(): void {
-    const table = { table: 'hours' };
+    const table = { table: 'hours', searchfield: 'label' };
     const route = 'hours';
     this._appService.load(route, table).subscribe({
       next: (res) => {
@@ -143,8 +201,6 @@ export class AgendaComponent implements OnInit {
 
   editBooking(booking: AgendaInterface) {
     this.booking = { ...booking };
-    console.log(this.booking);
-
   }
 
   onGlobalFilter(table: Table, event: Event) {

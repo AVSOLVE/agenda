@@ -25,6 +25,11 @@ import { InputTextModule } from "primeng/inputtext";
 import { InputNumberModule } from "primeng/inputnumber";
 import { InputMaskModule } from "primeng/inputmask";
 import { InputSwitchModule } from "primeng/inputswitch";
+import { TemplateRef } from '@angular/core';
+import { TableModule } from 'primeng/table';
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { DropdownModule } from "primeng/dropdown";
 
 @NgModule({
   declarations: [
@@ -48,6 +53,11 @@ import { InputSwitchModule } from "primeng/inputswitch";
     PrimeNgModule,
     CommonModule,
     FormsModule,
+    TableModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    TableModule,
+    DropdownModule,
     InputTextModule,
     InputNumberModule,
     InputMaskModule,

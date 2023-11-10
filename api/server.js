@@ -97,15 +97,14 @@ function responseMsg(id) {
 
 // GET ANY  ###############################################################################################################
 app.get('/:id', (req, res) => {
-  const { table } = req.headers;
-  const selectField = 'name';
-  db.query(sortTableQuery(selectField, table, selectField))
+  const { table, searchfield } = req.headers;
+  db.query(sortTableQuery(searchfield, table, searchfield))
 
   if (req.params.id === 'staff' || req.params.id === 'agenda' || req.params.id === 'user' || req.params.id === 'procedure' || req.params.id === 'hours') {
     db.query(searchAllQuery(table), (err, result) => {
       if (err) res.status(400).send({ message: 'Dados não carregados!', data: err });
       else {
-        db.query(orderAscQuery(table, selectField), (err, result) => {
+        db.query(orderAscQuery(table, searchfield), (err, result) => {
           res.status(200).send({ message: 'Dados carregados!', data: result });
         });
       }
@@ -130,10 +129,6 @@ app.delete('/:id', (req, res) => {
   db.query(indexResetQuery(table))
 })
 
-
-
-
-
 // POST ANY  ###############################################################################################################
 app.post('/:id', (req, res) => {
   const { data, table } = req.body;
@@ -143,7 +138,6 @@ app.post('/:id', (req, res) => {
   const setDate = '%' + data.date + '%';
   const setService = '%' + data.service + '%';
   const setHours = '%' + data.hours + '%';
-
 
   function generateInsertStaffQuery(data, table) {
     const name = data.name;
@@ -161,8 +155,28 @@ app.post('/:id', (req, res) => {
     return query;
   }
 
+  function generateInsertAgendaQuery(data, table) {
+    const name = data.name;
+    const date = JSON.stringify(data.date);
+    const startTime = JSON.stringify(data.startTime);
+    const endTime = JSON.stringify(data.endTime);
+    const service = JSON.stringify(data.service);
+
+    const query =
+      `INSERT INTO ${table} (name, date, startTime, endTime, service) VALUES (
+      '${name}',
+      '${date}',
+      '${startTime}',
+      '${endTime}',
+      '${service}')`;
+
+    return query;
+  }
+
   const msg = responseMsg(req.params.id);
+
   db.query(indexResetQuery(table));
+
   if (req.params.id === 'clients' || req.params.id === 'staff' || req.params.id === 'users') {
     db.query(searchOneFieldQuery(field1, table, setName), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: msg + ' existente', data: result });
@@ -176,13 +190,13 @@ app.post('/:id', (req, res) => {
   }
 
   if (req.params.id === 'agenda') {
-    const field2 = 'date';
-    const field3 = 'service';
-    const field4 = 'hours';
-    db.query(searchFourFieldsQuery(field1, field2, field3, field4, table, setName, setDate, setService, setHours), (err, result) => {
+    const field2 = 'service';
+    const field3 = 'date';
+    const field4 = 'startTime';
+    db.query(searchFourFieldsQuery(field1, field2, field3, field4, table, JSON.stringify(data.name), JSON.stringify(data.service), data.date, JSON.stringify(data.startTime)), (err, result) => {
       if (result.length > 0) res.status(400).send({ message: 'Agendamento existente!', data: result });
       else {
-        db.query(insertGenericQuery(table, data), (err, result) => {
+        db.query(generateInsertAgendaQuery(data, table), (err, result) => {
           if (err) res.status(404).send({ message: 'Agendamento não cadastrado!', data: err });
           else res.status(202).send({ message: 'Agendamento cadastrado!', data: result });
         })
