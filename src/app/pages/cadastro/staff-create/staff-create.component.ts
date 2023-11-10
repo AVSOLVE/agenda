@@ -3,9 +3,10 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { NameValueInterface } from '../../../interfaces/NameValue.interface';
 import { Router } from '@angular/router';
 import { appService } from 'src/app/services/app.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { ServicesInterface } from 'src/app/services/ServicesInterface';
 import { StaffInterface } from 'src/app/services/StaffInterface';
+import { each } from 'chart.js/dist/helpers/helpers.core';
 
 @Component({
   selector: 'app-staff-create',
@@ -47,27 +48,28 @@ export class StaffCreateComponent implements OnInit {
     private _fb: FormBuilder,
     private _router: Router,
     private _appService: appService,
-    private _messageService: MessageService
+    private _messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
     this.loadServices();
-    this.loadStaff();
+    this.load();
     this.setUpForm();
-    const jsonArrayString: string =
-      '[{"label":"08:00","value":8},{"label":"11:00","value":11},{"label":"12:00","value":12},{"label":"13:00","value":13},{"label":"14:00","value":14}]';
-    const parsedObjects: NameValueInterface[] =
-      this.parseJsonArray(jsonArrayString);
-    console.log(parsedObjects);
   }
 
   parseJsonArray(jsonString: string): NameValueInterface[] {
     try {
-      const parsedArray: NameValueInterface[] = JSON.parse(jsonString);
-      if (Array.isArray(parsedArray)) {
-        return parsedArray;
+      const parsedData: NameValueInterface | NameValueInterface[] =
+        JSON.parse(jsonString);
+
+      if (Array.isArray(parsedData)) {
+        return parsedData;
+      } else if (typeof parsedData === 'object' && parsedData !== null) {
+        // Handle case where parsedData is an object
+        return [parsedData];
       } else {
-        throw new Error('Invalid JSON data. Expected an array.');
+        throw new Error('Invalid JSON data. Expected an array or object.');
       }
     } catch (error) {
       console.error('Error parsing JSON:', error);
@@ -77,11 +79,16 @@ export class StaffCreateComponent implements OnInit {
 
   parseServicesObject(jsonString: string): ServicesInterface[] {
     try {
-      const parsedArray: ServicesInterface[] = JSON.parse(jsonString);
-      if (Array.isArray(parsedArray)) {
-        return parsedArray;
+      const parsedData: ServicesInterface | ServicesInterface[] =
+        JSON.parse(jsonString);
+
+      if (Array.isArray(parsedData)) {
+        return parsedData;
+      } else if (typeof parsedData === 'object' && parsedData !== null) {
+        // Handle case where parsedData is an object
+        return [parsedData];
       } else {
-        throw new Error('Invalid JSON data. Expected an array.');
+        throw new Error('Invalid JSON data. Expected an array or object.');
       }
     } catch (error) {
       console.error('Error parsing JSON:', error);
@@ -141,7 +148,36 @@ export class StaffCreateComponent implements OnInit {
     return weekdays[weekday];
   }
 
-  loadStaff(): void {
+  confirmationDelete(eachStaff: StaffInterface) {
+    this.confirmationService.confirm({
+      message: 'Você tem certeza que deseja excluir este serviço?',
+      header: 'Exclusão',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.delete(eachStaff);
+      },
+      reject: (type: ConfirmEventType) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this._messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+        }
+      },
+    });
+  }
+
+  load(): void {
     const table = { table: 'staff' };
     const route = 'staff';
     this._appService.load(route, table).subscribe({
@@ -175,12 +211,25 @@ export class StaffCreateComponent implements OnInit {
 
   save(): void {
     const table = 'staff';
-    console.log(this.userForm.value);
-
     this._appService.save(table, this.userForm.value).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
         this.ngOnInit();
+      },
+      error: (err) => {
+        this.showToast('error', 'Erro!', err.error.message);
+      },
+    });
+  }
+
+  delete(eachStaff: StaffInterface): void {
+    console.log(eachStaff);
+
+    const table = { table: 'staff' };
+    this._appService.delete(table, eachStaff).subscribe({
+      next: (res) => {
+        this.load();
+        this.showToast('success', 'Sucesso!', 'Serviço deletado!');
       },
       error: (err) => {
         this.showToast('error', 'Erro!', err.error.message);

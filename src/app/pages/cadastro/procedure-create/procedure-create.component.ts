@@ -138,6 +138,7 @@ if(this.buttonOptions == 0){
       },
     });
   }
+
   cancel() {
     this._router.navigate(['/home']);
   }

@@ -1,5 +1,6 @@
 <section class="header">
   <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
   <form [formGroup]="userForm" (ngSubmit)="save()">
     <section class="content pt-5 grid">
       <div class="p-card col-12 justify-content-center">
@@ -27,14 +28,14 @@
           <label>Serviços</label>
         </div>
         <div class="field p-float-label">
-          <p-dropdown
+          <p-multiSelect
             styleClass="w-full"
             formControlName="weekday"
             [resetFilterOnHide]="true"
             [options]="weekdays"
             optionLabel="label"
             placeholder="Dia"
-          ></p-dropdown>
+          ></p-multiSelect>
           <label>Dia</label>
         </div>
         <div class="field p-float-label">
@@ -68,49 +69,54 @@
         </div>
       </div>
 
-      <div class="card">
-        <div *ngFor="let each of staff">
-          <br>
-          <br>
-          -----NOME-----
-          <br>
-          <br>
-          <div>{{ each.name }}</div>
-          <br>
-          <br>
-          -----SERVIÇOS-----
-          <br>
-          <br>
-          <div *ngFor="let each of parseServicesObject(each.services)">
-            <div>{{ each.name }}</div>
-          </div>
-          <br>
-          <br>
-          -----HORÁRIOS-----
-          <br>
-          <br>
-          <div  *ngFor="let each of parseJsonArray(each.time)">
-            <div>{{ each.label }}</div>
-          </div>
-        </div>
-        <!-- <p-table [value]="hours" [tableStyle]="{ 'min-width': '50rem' }">
+      <div
+        *ngFor="let each of staff"
+        class="card flex justify-content-center mt-5 border-1 gap-2"
+      >
+        <p-card
+          [header]="each.name"
+          let
+          each="each.label"
+          [style]="{ width: '275px' }"
+        >
           <ng-template pTemplate="header">
-            <tr>
-              <th>Horarário</th>
-              <th>Colaborador</th>
-            </tr>
+            <img
+              alt="Card"
+              src="https://primefaces.org/cdn/primeng/images/usercard.png"
+            />
           </ng-template>
-          <ng-template pTemplate="body" let-rowIndex="rowIndex" let-staffByHour>
-            <tr> {{ hours[rowIndex].label }}
-              <td>
-                <ul>
-                  <li *ngFor="let each of getStaffByHour(hours[rowIndex].value, this.staff)">
-                    {{ each | json }} : {{ each.services }}
-                  </li>
-                </ul></td>
-            </tr>
+          <h3 class="text-center">Especialidades</h3>
+          <ul *ngFor="let eachserv of parseServicesObject(each.services)">
+            <li>{{ eachserv.name }}</li>
+          </ul>
+          <h3 class="text-center">Horários de Atendimento</h3>
+          <ul *ngFor="let eachhour of parseJsonArray(each.time)">
+            <li>{{ eachhour.label }}</li>
+          </ul>
+          <h3 class="text-center">Dias da Semana</h3>
+          <ul *ngFor="let eachday of parseJsonArray(each.weekday)">
+            <li>{{ eachday.label }}</li>
+          </ul>
+          <ng-template pTemplate="footer">
+            <div class="flex justify-content-between">
+              <button
+                pButton
+                type="button"
+                label="Editar"
+                icon="pi pi-check"
+                class="p-button-success"
+              ></button>
+              <button
+                pButton
+                type="button"
+                label="Delete"
+                icon="pi pi-trash"
+                class="p-button-danger"
+                (click)="confirmationDelete(each)"
+              ></button>
+            </div>
           </ng-template>
-        </p-table> -->
+        </p-card>
       </div>
     </section>
   </form>
