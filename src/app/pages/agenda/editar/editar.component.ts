@@ -65,9 +65,8 @@ export class EditarComponent {
 
 
   loadClients(): void {
-    const table = { table: 'person' }
-    const route = 'user';
-    this._appService.load(route, table)
+    const data = { table: 'person' }
+    this._appService.load(data)
       .subscribe({
         next: (res) => {
           this.clients = res.data;
@@ -76,9 +75,8 @@ export class EditarComponent {
   }
 
   loadProcedures(): void {
-    const table = { table: 'procedures' }
-    const route = 'procedure';
-    this._appService.load(route, table)
+    const data = { table: 'procedures' }
+    this._appService.load(data)
       .subscribe({
         next: (res) => {
           this.procedures = res.data;
@@ -87,9 +85,8 @@ export class EditarComponent {
   }
 
   loadHours(): void {
-    const table = { table: 'hours' }
-    const route = 'hours';
-    this._appService.load(route, table)
+    const data = { table: 'hours' }
+    this._appService.load(data)
       .subscribe({
         next: (res) => {
           this.hours = res.data;

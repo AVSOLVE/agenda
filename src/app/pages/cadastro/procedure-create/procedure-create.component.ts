@@ -113,11 +113,12 @@ if(this.buttonOptions == 0){
   }
 
   load(): void {
-    const table = { table: 'procedures' };
-    const route = 'procedure';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'procedures', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.services = res.data;
+        console.log(res.data);
+
         this.showToast('success', 'Successo!', res.message);
       },
       error: (err) => {

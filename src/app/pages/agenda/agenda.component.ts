@@ -6,8 +6,9 @@ import {
   TablePageEvent,
   Table,
 } from 'primeng/table';
-import { AgendaInterface, appService } from 'src/app/services/app.service';
+import { appService } from 'src/app/services/app.service';
 import { Component, OnInit } from '@angular/core';
+import { AgendaDataInterface } from 'src/app/services/AgendaInterface';
 
 interface Person {
   name: string;
@@ -32,11 +33,7 @@ interface Column {
 })
 export class AgendaComponent implements OnInit {
   selectedUser!: any;
-  agenda: AgendaInterface[] = [];
-  rowData: any;
   cols!: Column[];
-  toggleEditOnSelection: any;
-  toggleDeleteOnSelection: any;
   bookingDialog: boolean = false;
   booking: any = {};
   submitted: boolean = false;
@@ -52,14 +49,13 @@ export class AgendaComponent implements OnInit {
   week = 6;
   month: any;
   year: any;
-
+  agenda!: AgendaDataInterface[];
+  agendaData: Person[] = [];
   people: Person[] = [
     {
       name: 'John',
       tasks: [
         { startTime: 7, endTime: 9, taskName: 'Task 1', personName: 'John' },
-        { startTime: 10, endTime: 12, taskName: 'Task 4', personName: 'John' },
-        { startTime: 11, endTime: 15, taskName: 'Task 2', personName: 'John' },
       ],
     },
     {
@@ -88,7 +84,6 @@ export class AgendaComponent implements OnInit {
   ];
 
   constructor(
-    private _router: Router,
     private _appService: appService,
     private _messageService: MessageService
   ) {}
@@ -109,16 +104,6 @@ export class AgendaComponent implements OnInit {
     this.updateRowsWithPersonTasks(this.people);
   }
 
-  updateRowsWithPersonTasks(newPerson: Person[]): void {
-    newPerson.forEach((person) => {
-      person.tasks.forEach((task) => {
-        for (let i = task.startTime; i < task.endTime; i++) {
-          this.rows[i - 7].tasks.push({...task});
-        }
-      });
-    });
-  }
-
   getWeekDay(dayIndex: number) {
     const weekdays = [
       'Domingo',
@@ -137,19 +122,41 @@ export class AgendaComponent implements OnInit {
   }
 
   loadData(): void {
-    const table = { table: 'agenda', searchfield: 'name' };
-    const route = 'agenda';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'agenda', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
-        this.agenda = res.data;
+        this.agenda = res.data.name.name;
+        console.log('agendaData: ', this.agenda);
       },
+    });
+
+    // res.data.forEach((agenda:any) => {
+    //   agenda.tasks.map((task:any) => {
+    //     for (let i = 0; i < agenda.tasks.length; i++){
+    //       this.agendaData[i].tasks.push({
+    //         startTime: JSON.parse(task.startTime),
+    //         endTime: JSON.parse(task.endTime),
+    //         taskName: JSON.parse(task.taskName),
+    //         personName: JSON.parse(task.personName)
+    //       });
+    //     }
+    //   })
+    // })
+  }
+
+  updateRowsWithPersonTasks(newPerson: Person[]): void {
+    newPerson.forEach((person) => {
+      person.tasks.forEach((task) => {
+        for (let i = task.startTime; i < task.endTime; i++) {
+          this.rows[i - 7].tasks.push({ ...task });
+        }
+      });
     });
   }
 
   loadProcedures(): void {
-    const table = { table: 'procedures', searchfield: 'name' };
-    const route = 'procedure';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'procedures', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.procedures = res.data;
       },
@@ -157,9 +164,8 @@ export class AgendaComponent implements OnInit {
   }
 
   loadUsers(): void {
-    const table = { table: 'users', searchfield: 'name' };
-    const route = 'user';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'users', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.clients = res.data;
       },
@@ -167,9 +173,8 @@ export class AgendaComponent implements OnInit {
   }
 
   loadHours(): void {
-    const table = { table: 'hours', searchfield: 'label' };
-    const route = 'hours';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'hours', searchfield: 'label' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.hours = res.data;
       },
@@ -199,7 +204,7 @@ export class AgendaComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  editBooking(booking: AgendaInterface) {
+  editBooking(booking: AgendaDataInterface) {
     this.booking = { ...booking };
   }
 

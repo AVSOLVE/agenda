@@ -10,14 +10,6 @@ export interface ClienteInterface {
   bob?: string;
   message?: string;
 }
-export interface AgendaInterface {
-  id?: string;
-  name?: string;
-  procedure?: string;
-  date?: string;
-  time?: string;
-  status?: string;
-}
 
 @Injectable({
   providedIn: 'root',
@@ -27,8 +19,8 @@ export class appService {
 
   constructor(private _http: HttpClient) {}
 
-  load(table: any = {}, data: any = {}): Observable<any> {
-    const path = this.url + `/${table}`;
+  load(data: any = {}): Observable<any> {
+    const path = this.url + `/${data.table}`;
     return this._http.get(path, { headers: data });
   }
 

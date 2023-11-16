@@ -24,7 +24,6 @@ db.connect(err => {
 });
 
 
-
 // FUNCTION QUERIES ###############################################################################################################
 function sortTableQuery(selectField, table, orderByField) {
   return mysql.format('SELECT ?? FROM ?? ORDER BY ?? ASC;', [selectField, table, orderByField]);
@@ -100,7 +99,7 @@ app.get('/:id', (req, res) => {
   const { table, searchfield } = req.headers;
   db.query(sortTableQuery(searchfield, table, searchfield))
 
-  if (req.params.id === 'staff' || req.params.id === 'agenda' || req.params.id === 'user' || req.params.id === 'procedure' || req.params.id === 'hours') {
+  if (req.params.id === 'staff' || req.params.id === 'agenda' || req.params.id === 'user' || req.params.id === 'procedures' || req.params.id === 'hours') {
     db.query(searchAllQuery(table), (err, result) => {
       if (err) res.status(400).send({ message: 'Dados não carregados!', data: err });
       else {
@@ -118,6 +117,7 @@ app.get('/:id', (req, res) => {
     })
   }
 })
+
 
 // DELETE ANY  ###############################################################################################################
 app.delete('/:id', (req, res) => {
@@ -156,7 +156,7 @@ app.post('/:id', (req, res) => {
   }
 
   function generateInsertAgendaQuery(data, table) {
-    const name = data.name;
+    const name = JSON.stringify(data.name);
     const date = JSON.stringify(data.date);
     const startTime = JSON.stringify(data.startTime);
     const endTime = JSON.stringify(data.endTime);
@@ -216,6 +216,7 @@ app.post('/:id', (req, res) => {
     })
   }
 })
+
 
 // PUT ANY  ###############################################################################################################
 app.put('/:id', (req, res) => {

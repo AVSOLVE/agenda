@@ -178,9 +178,8 @@ export class StaffCreateComponent implements OnInit {
   }
 
   load(): void {
-    const table = { table: 'staff' };
-    const route = 'staff';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'staff', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.staff = res.data;
         this.showToast(
@@ -196,9 +195,8 @@ export class StaffCreateComponent implements OnInit {
   }
 
   loadServices(): void {
-    const table = { table: 'procedures' };
-    const route = 'procedure';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'procedures', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.services = res.data;
         this.showToast('success', 'Successo!', res.message);

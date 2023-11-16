@@ -30,6 +30,8 @@ import { TableModule } from 'primeng/table';
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DropdownModule } from "primeng/dropdown";
+import { FullCalendarModule } from "@fullcalendar/angular";
+import { CalendarComponent } from "./pages/agenda/calendar/calendar.component";
 
 @NgModule({
   declarations: [
@@ -48,14 +50,17 @@ import { DropdownModule } from "primeng/dropdown";
     LayoutComponent,
     HeroComponent,
     AgendaComponent,
+    CalendarComponent
    ],
   imports: [
     PrimeNgModule,
+    FullCalendarModule,
     CommonModule,
     FormsModule,
     TableModule,
     BrowserModule,
     BrowserAnimationsModule,
+    FullCalendarModule,
     TableModule,
     DropdownModule,
     InputTextModule,
@@ -66,7 +71,7 @@ import { DropdownModule } from "primeng/dropdown";
   ],
   providers: [
     MessageService,
-    ConfirmationService
+    ConfirmationService,
   ],
   bootstrap: [AppComponent]
 })

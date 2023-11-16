@@ -60,11 +60,10 @@ export class CriarComponent implements OnInit {
 
   save(): void {
     const table = 'agenda';
-    console.log(table, this.userForm.value);
-
     this._appService.save(table, this.userForm.value).subscribe({
       next: (res) => {
         this.showToast('success', 'Sucesso!', res.message);
+        this.userForm.reset();
         this.ngOnInit();
       },
       error: (err) => {
@@ -74,9 +73,8 @@ export class CriarComponent implements OnInit {
   }
 
   loadUsers(): void {
-    const table = { table: 'users', searchfield: 'name' };
-    const route = 'user';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'users', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.clients = res.data;
       },
@@ -84,9 +82,8 @@ export class CriarComponent implements OnInit {
   }
 
   loadProcedures(): void {
-    const table = { table: 'procedures', searchfield: 'name' };
-    const route = 'procedure';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'procedures', searchfield: 'name' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.services = res.data;
       },
@@ -94,9 +91,8 @@ export class CriarComponent implements OnInit {
   }
 
   loadHours(): void {
-    const table = { table: 'hours', searchfield: 'label' };
-    const route = 'hours';
-    this._appService.load(route, table).subscribe({
+    const data = { table: 'hours', searchfield: 'label' };
+    this._appService.load(data).subscribe({
       next: (res) => {
         this.hours = res.data;
       },
