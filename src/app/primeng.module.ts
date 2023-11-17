@@ -108,7 +108,6 @@ import { RouterModule } from "@angular/router";
   ],
   exports: [
     AppRoutingModule,
-
     AccordionModule,
     AnimateModule,
     AutoCompleteModule,
