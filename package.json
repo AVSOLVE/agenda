@@ -14,7 +14,7 @@
     "@angular/cdk": "^16.2.1",
     "@angular/common": "^16.1.0",
     "@angular/compiler": "^16.1.0",
-    "@angular/core": "^16.1.0",
+    "@angular/core": "^13.4.0",
     "@angular/forms": "^16.1.0",
     "@angular/platform-browser": "^16.1.0",
     "@angular/platform-browser-dynamic": "^16.1.0",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.1",
-    "@angular/cli": "~16.2.1",
+    "@angular/cli": "^13.3.11",
     "@angular/compiler-cli": "^16.1.0",
     "@types/jasmine": "~4.3.0",
     "autoprefixer": "^10.4.15",
